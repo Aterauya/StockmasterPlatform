@@ -10,18 +10,19 @@ using WebSocketSharp;
 
 namespace RealtimeStockCommandService.Handlers
 {
-    class StockIngestionHandler : IRealtimeStockIngestion
+    public class StockIngestionHandler : IRealtimeStockIngestion
     {
+
         public void StartIngestion()
         {
             using (var ws = new WebSocket(UrlHelper.GetFinnhubUrl()))
             {
-                ws.OnMessage += async (sender, e) =>
+                ws.OnMessage += (sender, e) =>
                 {
                     var dataJson = JsonConvert.DeserializeObject<StockDataIngestedDTO>(e.Data);
                     if(dataJson.Type.Equals("trade"))
                     {
-                        // Add to db
+                        Console.WriteLine("Stock symbol: " + dataJson.StockIngested.StockSymbol);
                     }
                 };
 

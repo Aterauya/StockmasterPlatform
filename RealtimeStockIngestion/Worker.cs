@@ -5,6 +5,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using RealtimeStockApi;
 
 namespace RealtimeStockIngestion
 {
@@ -24,7 +25,8 @@ namespace RealtimeStockIngestion
             while (!stoppingToken.IsCancellationRequested)
             {
                 _logger.LogInformation("Worker running at: {time}", DateTimeOffset.Now);
-                await _realtimeStockIngestion.StartIngestion();
+                _realtimeStockIngestion.StartIngestion();
+                await Task.Delay(999999999, stoppingToken);
             }
         }
     }
