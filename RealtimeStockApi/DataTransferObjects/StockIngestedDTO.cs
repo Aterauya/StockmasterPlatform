@@ -8,15 +8,15 @@ namespace RealtimeStockApi.DataTransferObjects
     public class StockIngestedDTO
     {
         [JsonProperty("p")]
-        public string Price { get; set; }
+        public double Price { get; set; }
 
         [JsonProperty("s")]
         public string StockSymbol { get; set; }
 
         [JsonProperty("t")]
-        public long DateTime { get; set; }
+        public long DateTimeTraded { get; set; }
 
         [JsonProperty("v")]
-        public double Value { get; set; }
+        public double Volume { get; set; }
     }
 }

@@ -22,7 +22,7 @@ namespace RealtimeStockCommandService.Handlers
                     var dataJson = JsonConvert.DeserializeObject<StockDataIngestedDTO>(e.Data);
                     if(dataJson.Type.Equals("trade"))
                     {
-                        Console.WriteLine("Stock symbol: " + dataJson.StockIngested.StockSymbol);
+
                     }
                 };
 
@@ -33,7 +33,7 @@ namespace RealtimeStockCommandService.Handlers
 
                 ws.OnOpen += (sender, e) =>
                 {
-                    var stocksToRequest = getStockSymbols();
+                    var stocksToRequest = GetStockSymbols();
                     foreach (var item in stocksToRequest)
                     {
                         var stockRequest = new StockRequestDTO
@@ -49,10 +49,13 @@ namespace RealtimeStockCommandService.Handlers
                 {
                     Console.WriteLine("Reason: " + e.Reason + " Code: " + e.Code);
                 };
+
+                ws.Connect();
+                Console.ReadKey();
             }
         }
 
-        public List<StockSymbolsDTO> getStockSymbols()
+        public List<StockSymbolsDTO> GetStockSymbols()
         {
             var stockRequest = new StockSymbolsDTO
             {

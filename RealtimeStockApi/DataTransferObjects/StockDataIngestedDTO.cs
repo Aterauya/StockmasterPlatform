@@ -11,7 +11,7 @@ namespace RealtimeStockApi.DataTransferObjects
         public Guid Id { get; set; }
 
         [JsonProperty("data")]
-        public StockIngestedDTO StockIngested { get; set; }
+        public List<StockIngestedDTO> StockIngested { get; set; }
 
         [JsonProperty("type")]
         public string Type { get; set; }
