@@ -1,27 +1,27 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using Common.AzureServiceBusClient;
+using Common.BusClient;
+using Common.Interfaces;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Hosting;
 using RealtimeStockApi;
-using RealtimeStockCommandService.Handlers;
+using RealtimeStockIngestion.Helpers;
+using System;
+using System.IO;
 
 namespace RealtimeStockIngestion
 {
-    public class Program
+    class Program
     {
-        public static void Main(string[] args)
+        static void Main(string[] args)
         {
-            CreateHostBuilder(args).Build().Run();
-        }
+            var serviceProvider = new ServiceCollection()
+            .AddSingleton<IBusClient, AzureServiceBusClient>()
+            .AddTransient<IRealtimeStockIngestion, RealtimeIngestionHelper>()
+            .AddTransient<IUrlHelper, UrlHelper>()
+            .BuildServiceProvider();
 
-        public static IHostBuilder CreateHostBuilder(string[] args) =>
-            Host.CreateDefaultBuilder(args)
-                .ConfigureServices((hostContext, services) =>
-                {
-                    services.AddHostedService<Worker>();
-                    services.AddTransient<IRealtimeStockIngestion, StockIngestionHandler>();
-                });
+            var realtimeStockIngestion = serviceProvider.GetService<IRealtimeStockIngestion>();
+            realtimeStockIngestion.StartIngestion();
+        }
     }
 }

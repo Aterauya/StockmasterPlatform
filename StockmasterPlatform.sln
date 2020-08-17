@@ -3,15 +3,23 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.29806.167
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RealtimeStockIngestionWorker", "RealtimeStockIngestion\RealtimeStockIngestionWorker.csproj", "{5DF3AE07-689D-4659-B38C-4B53A450242B}"
-EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "RealtimeStock", "RealtimeStock", "{D269B2BE-7832-49F0-828C-8053795F8DD1}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RealtimeStockApi", "RealtimeStockApi\RealtimeStockApi.csproj", "{3CD74684-0C09-42CD-BD79-54261D09327D}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RealtimeStockCommandService", "RealtimeStockCommandService\RealtimeStockCommandService.csproj", "{20A0810A-6C52-4EB6-A5B4-7883B5566B18}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RealtimeStockEntityFramework", "RealtimeStockEntityFramework\RealtimeStockEntityFramework.csproj", "{D771DBA7-BF23-475B-BA54-A36BC4A24214}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RealtimeStockEntityFramework", "RealtimeStockEntityFramework\RealtimeStockEntityFramework.csproj", "{D771DBA7-BF23-475B-BA54-A36BC4A24214}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RealtimeStockCommandService", "RealtimeStockCommandService\RealtimeStockCommandService.csproj", "{6B53C720-D01F-49BD-AFEB-5B218043B4DA}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Common", "Common\Common.csproj", "{5AFB44EF-74C3-4626-BCF9-82F45B8E83A4}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RealtimeStockIngestion", "RealtimeStockIngestion\RealtimeStockIngestion.csproj", "{C4DB4239-6656-4223-849A-FE3B3F3B3400}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Companies", "Companies", "{3F1E479E-B4EE-45A0-A1C2-820A81421892}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CompaniesIngestionWorker", "CompaniesIngestionWorker\CompaniesIngestionWorker.csproj", "{763C9511-6409-47BD-9EA4-141CADC5EE3C}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CompaniesApi", "CompaniesApi\CompaniesApi.csproj", "{30172561-AD14-4FD3-8BE8-592ADA005B32}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -19,31 +27,45 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{5DF3AE07-689D-4659-B38C-4B53A450242B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{5DF3AE07-689D-4659-B38C-4B53A450242B}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{5DF3AE07-689D-4659-B38C-4B53A450242B}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{5DF3AE07-689D-4659-B38C-4B53A450242B}.Release|Any CPU.Build.0 = Release|Any CPU
 		{3CD74684-0C09-42CD-BD79-54261D09327D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{3CD74684-0C09-42CD-BD79-54261D09327D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{3CD74684-0C09-42CD-BD79-54261D09327D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{3CD74684-0C09-42CD-BD79-54261D09327D}.Release|Any CPU.Build.0 = Release|Any CPU
-		{20A0810A-6C52-4EB6-A5B4-7883B5566B18}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{20A0810A-6C52-4EB6-A5B4-7883B5566B18}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{20A0810A-6C52-4EB6-A5B4-7883B5566B18}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{20A0810A-6C52-4EB6-A5B4-7883B5566B18}.Release|Any CPU.Build.0 = Release|Any CPU
 		{D771DBA7-BF23-475B-BA54-A36BC4A24214}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{D771DBA7-BF23-475B-BA54-A36BC4A24214}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D771DBA7-BF23-475B-BA54-A36BC4A24214}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D771DBA7-BF23-475B-BA54-A36BC4A24214}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6B53C720-D01F-49BD-AFEB-5B218043B4DA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6B53C720-D01F-49BD-AFEB-5B218043B4DA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6B53C720-D01F-49BD-AFEB-5B218043B4DA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6B53C720-D01F-49BD-AFEB-5B218043B4DA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5AFB44EF-74C3-4626-BCF9-82F45B8E83A4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5AFB44EF-74C3-4626-BCF9-82F45B8E83A4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5AFB44EF-74C3-4626-BCF9-82F45B8E83A4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5AFB44EF-74C3-4626-BCF9-82F45B8E83A4}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C4DB4239-6656-4223-849A-FE3B3F3B3400}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C4DB4239-6656-4223-849A-FE3B3F3B3400}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C4DB4239-6656-4223-849A-FE3B3F3B3400}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C4DB4239-6656-4223-849A-FE3B3F3B3400}.Release|Any CPU.Build.0 = Release|Any CPU
+		{763C9511-6409-47BD-9EA4-141CADC5EE3C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{763C9511-6409-47BD-9EA4-141CADC5EE3C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{763C9511-6409-47BD-9EA4-141CADC5EE3C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{763C9511-6409-47BD-9EA4-141CADC5EE3C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{30172561-AD14-4FD3-8BE8-592ADA005B32}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{30172561-AD14-4FD3-8BE8-592ADA005B32}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{30172561-AD14-4FD3-8BE8-592ADA005B32}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{30172561-AD14-4FD3-8BE8-592ADA005B32}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
-		{5DF3AE07-689D-4659-B38C-4B53A450242B} = {D269B2BE-7832-49F0-828C-8053795F8DD1}
 		{3CD74684-0C09-42CD-BD79-54261D09327D} = {D269B2BE-7832-49F0-828C-8053795F8DD1}
-		{20A0810A-6C52-4EB6-A5B4-7883B5566B18} = {D269B2BE-7832-49F0-828C-8053795F8DD1}
 		{D771DBA7-BF23-475B-BA54-A36BC4A24214} = {D269B2BE-7832-49F0-828C-8053795F8DD1}
+		{6B53C720-D01F-49BD-AFEB-5B218043B4DA} = {D269B2BE-7832-49F0-828C-8053795F8DD1}
+		{C4DB4239-6656-4223-849A-FE3B3F3B3400} = {D269B2BE-7832-49F0-828C-8053795F8DD1}
+		{763C9511-6409-47BD-9EA4-141CADC5EE3C} = {3F1E479E-B4EE-45A0-A1C2-820A81421892}
+		{30172561-AD14-4FD3-8BE8-592ADA005B32} = {3F1E479E-B4EE-45A0-A1C2-820A81421892}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {162E85F6-3717-44FE-A349-BAACE159D2AF}

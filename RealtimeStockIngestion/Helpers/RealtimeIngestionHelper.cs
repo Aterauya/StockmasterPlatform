@@ -1,28 +1,42 @@
-﻿using Newtonsoft.Json;
+﻿using Common.DataTransferObjects;
+using Newtonsoft.Json;
 using RealtimeStockApi;
-using RealtimeStockApi.DataTransferObjects;
-using RealtimeStockCommandService.Helpers;
 using System;
 using System.Collections.Generic;
-using System.Threading.Tasks;
+using System.Configuration;
+using System.Net.Http;
 using WebSocketSharp;
+using System.Threading.Tasks;
+using Common.BusClient;
+using Common.Events;
+using Microsoft.Extensions.Configuration;
+using Common.Interfaces;
 
-
-namespace RealtimeStockCommandService.Handlers
+namespace RealtimeStockIngestion.Helpers
 {
-    public class StockIngestionHandler : IRealtimeStockIngestion
+    public class RealtimeIngestionHelper : IRealtimeStockIngestion
     {
+        private readonly IBusClient _busClient;
+        private readonly IUrlHelper _urlHelper;
+        public RealtimeIngestionHelper(IBusClient busClient, IUrlHelper urlHelper, IConfiguration configuration)
+        {
+            _busClient = busClient;
+            _urlHelper = urlHelper;
+        }
 
         public void StartIngestion()
         {
-            using (var ws = new WebSocket(UrlHelper.GetFinnhubUrl()))
+            using (var ws = new WebSocket(_urlHelper.GetFinnhubUrl()))
             {
-                ws.OnMessage += (sender, e) =>
+                ws.OnMessage += async (sender, e) =>
                 {
                     var dataJson = JsonConvert.DeserializeObject<StockDataIngestedDTO>(e.Data);
-                    if(dataJson.Type.Equals("trade"))
+                    if (dataJson.Type.Equals("trade"))
                     {
-
+                        await _busClient.SendMessage(new RealtimeStockIngestedEvent
+                        { 
+                            StockIngested = dataJson,
+                        });
                     }
                 };
 

@@ -3,7 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace RealtimeStockApi.DataTransferObjects
+namespace Common.DataTransferObjects
 {
     public class StockRequestDTO
     {

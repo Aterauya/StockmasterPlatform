@@ -1,17 +1,28 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
 
   <PropertyGroup>
     <TargetFramework>netcoreapp3.1</TargetFramework>
+    <UserSecretsId>c787a91c-d447-4055-81eb-d474269f2eba</UserSecretsId>
+    <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Newtonsoft.Json" Version="12.0.3" />
+    <PackageReference Include="Flurl" Version="2.8.2" />
+    <PackageReference Include="Flurl.Http" Version="2.4.2" />
+    <PackageReference Include="MassTransit" Version="7.0.2" />
+    <PackageReference Include="MassTransit.AspNetCore" Version="7.0.2" />
+    <PackageReference Include="MassTransit.Azure.ServiceBus.Core" Version="7.0.2" />
+    <PackageReference Include="MassTransit.AzureServiceBus" Version="5.5.6" />
+    <PackageReference Include="MassTransit.RabbitMQ" Version="7.0.2" />
+    <PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.9.10" />
     <PackageReference Include="System.Configuration.ConfigurationManager" Version="4.7.0" />
     <PackageReference Include="websocketsharp.core" Version="1.0.0" />
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\Common\Common.csproj" />
     <ProjectReference Include="..\RealtimeStockApi\RealtimeStockApi.csproj" />
+    <ProjectReference Include="..\RealtimeStockEntityFramework\RealtimeStockEntityFramework.csproj" />
   </ItemGroup>
 
 </Project>
