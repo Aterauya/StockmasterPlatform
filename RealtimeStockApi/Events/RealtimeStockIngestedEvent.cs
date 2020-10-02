@@ -1,7 +1,7 @@
 ﻿using Common.BusClient;
-using Common.DataTransferObjects;
+using RealtimeStockApi.DataTransferObjects;
 
-namespace Common.Events
+namespace RealtimeStockApi.Events
 {
     public class RealtimeStockIngestedEvent : BusMessage
     {

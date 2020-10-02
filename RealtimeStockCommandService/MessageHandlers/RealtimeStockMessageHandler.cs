@@ -1,14 +1,11 @@
 ﻿using Common.BusClient;
-using Common.DataTransferObjects;
-using Common.Events;
 using Microsoft.Azure.ServiceBus;
 using Newtonsoft.Json;
+using RealtimeStockApi.DataTransferObjects;
 using RealtimeStockApi.EntityFrameworkInterfaces;
+using RealtimeStockApi.Events;
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 
 namespace RealtimeStockCommandService.MessageHandlers
 {

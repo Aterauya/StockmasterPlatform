@@ -1,12 +1,10 @@
 ﻿using Common.AzureServiceBusClient;
 using Common.BusClient;
-using Common.Interfaces;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using RealtimeStockApi;
+using RealtimeStockApi.Interfaces;
 using RealtimeStockIngestion.Helpers;
-using System;
-using System.IO;
 
 namespace RealtimeStockIngestion
 {
@@ -14,10 +12,17 @@ namespace RealtimeStockIngestion
     {
         static void Main(string[] args)
         {
+            IConfiguration _configuration = new ConfigurationBuilder()
+                .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
+                .AddEnvironmentVariables()
+                .Build();
+
+
             var serviceProvider = new ServiceCollection()
             .AddSingleton<IBusClient, AzureServiceBusClient>()
             .AddTransient<IRealtimeStockIngestion, RealtimeIngestionHelper>()
-            .AddTransient<IUrlHelper, UrlHelper>()
+            .AddTransient<IRealtimeStockUrlHelper, RealtimeStockUrlHelper>()
+            .AddSingleton(_configuration)
             .BuildServiceProvider();
 
             var realtimeStockIngestion = serviceProvider.GetService<IRealtimeStockIngestion>();

@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Common.DataTransferObjects
+namespace RealtimeStockApi.DataTransferObjects
 {
     public class StockSymbolsDTO
     {

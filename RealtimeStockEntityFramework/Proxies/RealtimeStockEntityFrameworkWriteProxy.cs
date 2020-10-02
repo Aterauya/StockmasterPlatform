@@ -1,5 +1,5 @@
-﻿using Common.DataTransferObjects;
-using Microsoft.Extensions.DependencyInjection;
+﻿using Microsoft.Extensions.DependencyInjection;
+using RealtimeStockApi.DataTransferObjects;
 using RealtimeStockApi.EntityFrameworkInterfaces;
 using RealtimeStockEntityFramework.Models;
 using System;

@@ -13,10 +13,10 @@ namespace Common.AzureServiceBusClient
     {
         private readonly QueueClient _queueClient;
         private readonly string _queueName;
-        public AzureServiceBusClient()
+        public AzureServiceBusClient(IConfiguration configuration)
         {
-            _queueName = ConfigurationManager.AppSettings["QueueName"];
-            _queueClient = new QueueClient(ConfigurationManager.ConnectionStrings["AzureServiceBusConnectionString"].ConnectionString, _queueName);
+            _queueName = configuration["queueName"];
+            _queueClient = new QueueClient(configuration["azureServiceBusConnectionString"], _queueName);
         }
 
         public async Task SendMessage(BusMessage busMessage)

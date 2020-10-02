@@ -1,24 +1,20 @@
-﻿using Common.DataTransferObjects;
+﻿using Common.BusClient;
 using Newtonsoft.Json;
 using RealtimeStockApi;
+using RealtimeStockApi.DataTransferObjects;
+using RealtimeStockApi.Events;
+using RealtimeStockApi.Interfaces;
 using System;
 using System.Collections.Generic;
-using System.Configuration;
-using System.Net.Http;
 using WebSocketSharp;
-using System.Threading.Tasks;
-using Common.BusClient;
-using Common.Events;
-using Microsoft.Extensions.Configuration;
-using Common.Interfaces;
 
 namespace RealtimeStockIngestion.Helpers
 {
     public class RealtimeIngestionHelper : IRealtimeStockIngestion
     {
         private readonly IBusClient _busClient;
-        private readonly IUrlHelper _urlHelper;
-        public RealtimeIngestionHelper(IBusClient busClient, IUrlHelper urlHelper, IConfiguration configuration)
+        private readonly IRealtimeStockUrlHelper _urlHelper;
+        public RealtimeIngestionHelper(IBusClient busClient, IRealtimeStockUrlHelper urlHelper)
         {
             _busClient = busClient;
             _urlHelper = urlHelper;
@@ -26,7 +22,7 @@ namespace RealtimeStockIngestion.Helpers
 
         public void StartIngestion()
         {
-            using (var ws = new WebSocket(_urlHelper.GetFinnhubUrl()))
+            using (var ws = new WebSocket(_urlHelper.GetFinnhubRealtimeStockUrl()))
             {
                 ws.OnMessage += async (sender, e) =>
                 {
