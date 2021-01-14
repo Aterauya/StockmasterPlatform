@@ -16,7 +16,7 @@ namespace Common.AzureServiceBusClient
         public AzureServiceBusClient(IConfiguration configuration)
         {
             _queueName = configuration["queueName"];
-            _queueClient = new QueueClient(configuration["azureServiceBusConnectionString"], _queueName);
+            _queueClient = new QueueClient(configuration.GetConnectionString("AzureServiceBusConnectionString"), _queueName);
         }
 
         public async Task SendMessage(BusMessage busMessage)

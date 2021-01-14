@@ -18,7 +18,7 @@ namespace RealtimeStockCommandService.MessageHandlers
         }
         public void Handle(Message message)
         {
-            var data = JsonConvert.DeserializeObject<RealtimeStockIngestedEvent>(Encoding.UTF8.GetString(message.Body));
+            var data = JsonConvert.DeserializeObject<RealtimeStockIngestedMessage>(Encoding.UTF8.GetString(message.Body));
             var payload = new StockDataIngestedDTO()
             {
                 Id = Guid.NewGuid(),

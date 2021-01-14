@@ -1,20 +1,21 @@
-﻿using Common.BusClient;
-using Microsoft.Azure.ServiceBus;
-using Microsoft.Extensions.Configuration;
-using RealtimeStockApi.EntityFrameworkInterfaces;
-using System;
+﻿using System;
+using System.Collections.Generic;
+using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using Common.BusClient;
+using Microsoft.Azure.ServiceBus;
+using Microsoft.Extensions.Configuration;
 
-namespace RealtimeStockCommandService.EventConsumers
+namespace Common.AzureServiceBusClient
 {
-    public class RealtimeStockIngestedMessageConsumer : IBusMessageConsumer
+    public class AzureServiceBusMessageConsumer : IBusMessageConsumer
     {
         private readonly QueueClient _queueClient;
         private readonly string _queueName;
         private readonly IBusMessageHandler _messageHandler;
         private readonly IConfiguration _config;
-        public RealtimeStockIngestedMessageConsumer(IBusMessageHandler messageHandler, IConfiguration config)
+        public AzureServiceBusMessageConsumer(IBusMessageHandler messageHandler, IConfiguration config)
         {
             _config = config;
             _queueName = _config["queueName"];
@@ -49,7 +50,5 @@ namespace RealtimeStockCommandService.EventConsumers
 
             return Task.CompletedTask;
         }
-
-
     }
 }

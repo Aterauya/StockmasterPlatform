@@ -29,7 +29,7 @@ namespace RealtimeStockIngestion.Helpers
                     var dataJson = JsonConvert.DeserializeObject<StockDataIngestedDTO>(e.Data);
                     if (dataJson.Type.Equals("trade"))
                     {
-                        await _busClient.SendMessage(new RealtimeStockIngestedEvent
+                        await _busClient.SendMessage(new RealtimeStockIngestedMessage
                         { 
                             StockIngested = dataJson,
                         });

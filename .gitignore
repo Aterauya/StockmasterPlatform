@@ -338,3 +338,8 @@ ASALocalRun/
 
 # BeatPulse healthcheck temp database
 healthchecksdb
+RealtimeStockIngestion/App.config
+
+RealtimeStockCommandService/appsettings.json
+
+CompaniesIngestionWorker/appsettings.json

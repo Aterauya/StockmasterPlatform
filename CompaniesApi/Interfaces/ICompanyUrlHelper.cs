@@ -6,6 +6,8 @@ namespace CompaniesApi.Interfaces
 {
     public interface ICompanyUrlHelper
     {
-        string GetFinnhubCompaniesUrl();
+        string GetFinnhubCompaniesSymbolUrl();
+
+        string GetFinnhubCompanyProfileUrl(string ticker);
     }
 }

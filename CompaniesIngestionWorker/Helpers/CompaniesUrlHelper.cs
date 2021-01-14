@@ -12,9 +12,14 @@ namespace CompaniesIngestionWorker.Helpers
             _configuration = configuration;
         }
 
-        public string GetFinnhubCompaniesUrl()
+        public string GetFinnhubCompaniesSymbolUrl()
         {
-            return string.Format(_configuration["finnHubCompaniesUrl"], _configuration["finnHubCompaniesExchange"], _configuration["finnHubToken"]);
+            return string.Format(_configuration["finnHubCompaniesSymbolUrl"], _configuration["finnHubCompaniesExchange"], _configuration["finnHubToken"]);
+        }
+
+        public string GetFinnhubCompanyProfileUrl(string ticker)
+        {
+            return string.Format(_configuration["finnHubCompaniesProfileUrl"], ticker, _configuration["finnHubToken"]);
         }
     }
 }

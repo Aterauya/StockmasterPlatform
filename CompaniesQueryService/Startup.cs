@@ -1,17 +1,18 @@
-using Common.AzureServiceBusClient;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+using CompaniesApi.Interfaces;
+using CompaniesEntityFramework.Models;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using RealtimeStockApi.EntityFrameworkInterfaces;
-using Common.BusClient;
-using RealtimeStockCommandService.MessageHandlers;
-using Microsoft.Extensions.Configuration;
-using RealtimeStockEntityFramework.Proxies;
-using RealtimeStockEntityFramework.Models;
-using Microsoft.EntityFrameworkCore;
 
-namespace RealtimeStockCommandService
+namespace CompaniesQueryService
 {
     public class Startup
     {
@@ -24,10 +25,8 @@ namespace RealtimeStockCommandService
         // For more information on how to configure your application, visit https://go.microsoft.com/fwlink/?LinkID=398940
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddDbContext<RealtimeStockContext>(options => options.UseSqlServer(_configuration.GetConnectionString("RealtimeStockDbConnection")));
-            services.AddTransient<IRealtimeStockEntityFrameworkWriteProxy, RealtimeStockEntityFrameworkWriteProxy>();
-            services.AddTransient<IBusMessageHandler, RealtimeStockMessageHandler>();
-            services.AddTransient<IBusMessageConsumer, AzureServiceBusMessageConsumer>();
+            services.AddDbContext<CompanyDbContext>(options => options.UseSqlServer(_configuration.GetConnectionString("CompanyDbConnection")));
+            services.AddTransient<ICompanyReadProxy, ICompanyReadProxy>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -38,9 +37,15 @@ namespace RealtimeStockCommandService
                 app.UseDeveloperExceptionPage();
             }
 
-            var consumer = app.ApplicationServices.GetRequiredService<IBusMessageConsumer>();
-            consumer.RegisterConsumer();
+            app.UseRouting();
 
+            app.UseEndpoints(endpoints =>
+            {
+                endpoints.MapGet("/", async context =>
+                {
+                    await context.Response.WriteAsync("Hello World!");
+                });
+            });
         }
     }
 }

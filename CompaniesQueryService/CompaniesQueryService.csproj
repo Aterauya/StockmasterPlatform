@@ -1,19 +1,19 @@
-﻿<Project Sdk="Microsoft.NET.Sdk.Worker">
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
 
   <PropertyGroup>
     <TargetFramework>netcoreapp3.1</TargetFramework>
-    <UserSecretsId>dotnet-CompaniesIngestionWorker-3F5B649D-C051-4DD6-A236-C458076C4E1E</UserSecretsId>
+    <UserSecretsId>cb193315-0fd7-47fe-9770-c659b61e5bce</UserSecretsId>
     <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Coravel" Version="4.0.1" />
-    <PackageReference Include="Microsoft.Extensions.Hosting" Version="3.1.1" />
     <PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.9.10" />
+    <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="3.1.4" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\CompaniesApi\CompaniesApi.csproj" />
     <ProjectReference Include="..\CompaniesEntityFramework\CompaniesEntityFramework.csproj" />
   </ItemGroup>
+
 </Project>

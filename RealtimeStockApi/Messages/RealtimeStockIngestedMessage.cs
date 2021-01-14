@@ -3,7 +3,7 @@ using RealtimeStockApi.DataTransferObjects;
 
 namespace RealtimeStockApi.Events
 {
-    public class RealtimeStockIngestedEvent : BusMessage
+    public class RealtimeStockIngestedMessage : BusMessage
     {
         public StockDataIngestedDTO StockIngested { get; set; }
     }
