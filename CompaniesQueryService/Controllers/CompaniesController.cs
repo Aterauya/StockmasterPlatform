@@ -54,7 +54,7 @@ namespace CompaniesQueryService.Controllers
 
             var companyInformation = await _readProxy.GetCompanyInformation(companyId);
 
-            if (companyInformation == null)
+            if (companyInformation.CompanyId == Guid.Empty)
             {
                 _logger.LogError("No companies found with the given id " + companyId);
                 return NotFound();
