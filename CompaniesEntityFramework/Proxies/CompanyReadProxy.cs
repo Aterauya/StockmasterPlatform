@@ -25,7 +25,7 @@ namespace CompaniesEntityFramework.Proxies
 
         public async Task<List<StockSymbolDTO>> GetCompanySymbols()
         {
-            if (_dbContext.CompanyInformation == null)
+            if (!_dbContext.CompanySymbol.Any())
             {
                 _logger.LogError("Error when getting companies symbols from database");
                 throw new DataException();
@@ -40,9 +40,9 @@ namespace CompaniesEntityFramework.Proxies
                 }).ToListAsync();
         }
 
-        public async Task<List<CompanyInformationDto>> GetCompanyInformation()
+        public async Task<List<CompanyInformationDto>> GetAllCompanyInformation()
         {
-            if (_dbContext.CompanyInformation == null)
+            if (!_dbContext.CompanyInformation.Any())
             {
                 _logger.LogError("Error when getting companies information from database");
                 throw new DataException();
@@ -69,7 +69,7 @@ namespace CompaniesEntityFramework.Proxies
 
         public async Task<CompanyInformationDto> GetCompanyInformation(Guid companyId)
         {
-            if (_dbContext.CompanyInformation == null || companyId == null)
+            if (!_dbContext.CompanyInformation.Any() || companyId == null)
             {
                 _logger.LogError("Error when getting company information from database");
                 throw new DataException();

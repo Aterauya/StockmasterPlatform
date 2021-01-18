@@ -55,6 +55,28 @@ namespace CompaniesQueryService.Test
             };
         }
 
+        private List<StockSymbolDTO> GetStockSymbols()
+        {
+            return new List<StockSymbolDTO>
+            {
+                new StockSymbolDTO
+                {
+                    SymbolId = new Guid("18c4f615-6c2a-490c-b839-1f2515036288"),
+                    Symbol = "Test symbol 1"
+                },
+                new StockSymbolDTO
+                {
+                    SymbolId = new Guid("0443be49-c725-4090-84c0-b3ed37bf993c"),
+                    Symbol = "Test symbol 2"
+                },
+                new StockSymbolDTO
+                {
+                    SymbolId = new Guid("64f7773e-5230-4fdd-9e20-321a3a81754a"),
+                    Symbol = "Test symbol 3"
+                }
+            };
+        }
+
         private CompanyInformationDto GetCompanyInformation()
         {
             return new CompanyInformationDto
@@ -93,7 +115,7 @@ namespace CompaniesQueryService.Test
         {
             // Arrange
             var mockProxy = new Mock<ICompanyReadProxy>();
-            mockProxy.Setup(proxy => proxy.GetCompanyInformation())
+            mockProxy.Setup(proxy => proxy.GetAllCompanyInformation())
                 .ReturnsAsync(GetCompaniesInformation());
 
             var controller = new CompaniesController(mockProxy.Object, logger);
@@ -112,7 +134,7 @@ namespace CompaniesQueryService.Test
         {
             // Arrange 
             var mockProxy = new Mock<ICompanyReadProxy>();
-            mockProxy.Setup(proxy => proxy.GetCompanyInformation())
+            mockProxy.Setup(proxy => proxy.GetAllCompanyInformation())
                 .ReturnsAsync(new List<CompanyInformationDto>());
 
             var controller = new CompaniesController(mockProxy.Object, logger);
@@ -176,6 +198,42 @@ namespace CompaniesQueryService.Test
 
             // Assert
             Assert.IsInstanceOf(typeof(ActionResult<CompanyInformationDto>), result);
+            Assert.IsInstanceOf(typeof(NotFoundResult), result.Result);
+        }
+
+        [Test]
+        public async Task GetStockSymbolsReturnsData()
+        {
+            // Arrange 
+            var mockProxy = new Mock<ICompanyReadProxy>();
+            mockProxy.Setup(proxy => proxy.GetCompanySymbols())
+                .ReturnsAsync(GetStockSymbols());
+
+            var controller = new CompaniesController(mockProxy.Object, logger);
+
+            // Act
+            var result = await controller.GetAllCompanySymbols();
+
+            // Assert
+            Assert.IsInstanceOf(typeof(ActionResult<List<StockSymbolDTO>>), result);
+            Assert.AreEqual("Test symbol 1", result.Value[0].Symbol);
+        }
+
+        [Test]
+        public async Task GetStockSymbolReturnsNotFound()
+        {
+            // Arrange 
+            var mockProxy = new Mock<ICompanyReadProxy>();
+            mockProxy.Setup(proxy => proxy.GetCompanySymbols())
+                .ReturnsAsync(new List<StockSymbolDTO>());
+
+            var controller = new CompaniesController(mockProxy.Object, logger);
+
+            // Act
+            var result = await controller.GetAllCompanySymbols();
+
+            // Assert
+            Assert.IsInstanceOf(typeof(ActionResult<List<StockSymbolDTO>>), result);
             Assert.IsInstanceOf(typeof(NotFoundResult), result.Result);
         }
     }

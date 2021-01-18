@@ -10,7 +10,7 @@ namespace CompaniesApi.Interfaces
     {
         Task<List<StockSymbolDTO>> GetCompanySymbols();
 
-        Task<List<CompanyInformationDto>> GetCompanyInformation();
+        Task<List<CompanyInformationDto>> GetAllCompanyInformation();
 
         Task<CompanyInformationDto> GetCompanyInformation(Guid companyId);
     }

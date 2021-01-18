@@ -10,17 +10,53 @@ using Microsoft.Extensions.Logging;
 
 namespace CompaniesQueryService.Controllers
 {
+    /// <summary>
+    /// The controller for Getting companies information
+    /// </summary>
+    [Route("api/[controller]")]
+    [ApiController]
     public class CompaniesController : Controller
     {
         private readonly ICompanyReadProxy _readProxy;
         private readonly ILogger<CompaniesController> _logger;
 
+        /// <summary>
+        /// Constructs a CompaniesController
+        /// </summary>
+        /// <param name="readProxy">The read proxy</param>
+        /// <param name="logger">The logger</param>
         public CompaniesController(ICompanyReadProxy readProxy, ILogger<CompaniesController> logger)
         {
             _readProxy = readProxy;
             _logger = logger;
         }
 
+        /// <summary>
+        /// Gets all of the companies symbols
+        /// </summary>
+        /// <returns>A list of company symbols</returns>
+        [Route("GetAllSymbols")]
+        [HttpGet]
+        [ProducesResponseType(typeof(List<StockSymbolDTO>), StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [Produces("application/json")]
+        public async Task<ActionResult<List<StockSymbolDTO>>> GetAllCompanySymbols()
+        {
+            var companiesSymbols = await _readProxy.GetCompanySymbols();
+
+            if (companiesSymbols.Count == 0)
+            {
+                _logger.LogError("No company information");
+                return NotFound();
+            }
+
+            return companiesSymbols;
+        }
+
+        /// <summary>
+        /// Gets all of the information for all of the companies
+        /// </summary>
+        /// <returns>A list of company information</returns>
         [Route("GetCompaniesInformation")]
         [HttpGet]
         [ProducesResponseType(typeof(List<CompanyInformationDto>), StatusCodes.Status200OK)]
@@ -28,7 +64,7 @@ namespace CompaniesQueryService.Controllers
         [Produces("application/json")]
         public async Task<ActionResult<List<CompanyInformationDto>>> GetCompaniesInformation()
         {
-            var companiesInformation = await _readProxy.GetCompanyInformation();
+            var companiesInformation = await _readProxy.GetAllCompanyInformation();
 
             if (companiesInformation.Count == 0)
             {
@@ -39,6 +75,11 @@ namespace CompaniesQueryService.Controllers
             return companiesInformation;
         }
 
+        /// <summary>
+        /// Gets information about a specific company
+        /// </summary>
+        /// <param name="companyId">The id of the company</param>
+        /// <returns>Information about a specific company</returns>
         [Route("GetCompanyInformation/{companyId}")]
         [HttpGet]
         [ProducesResponseType(typeof(CompanyInformationDto), StatusCodes.Status200OK)]
