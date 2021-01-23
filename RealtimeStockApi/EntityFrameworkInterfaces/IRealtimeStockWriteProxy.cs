@@ -3,8 +3,8 @@ using System.Threading.Tasks;
 
 namespace RealtimeStockApi.EntityFrameworkInterfaces
 {
-    public interface IRealtimeStockEntityFrameworkWriteProxy
+    public interface IRealtimeStockWriteProxy
     {
-        Task AddRealTimeStock(StockDataIngestedDTO stock);
+        void AddRealTimeStock(StockDataIngestedDTO stock);
     }
 }

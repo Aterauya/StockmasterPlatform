@@ -8,20 +8,18 @@ using Microsoft.Extensions.Options;
 
 namespace CompaniesEntityFramework.Test.DatabaseMocks
 {
-    public class TestDb
+    public class CompaniesTestDb
     {
         private CompanyDbContext _context;
 
-        public TestDb()
+        public CompaniesTestDb(IConfiguration configuration)
         {
             var options = new DbContextOptionsBuilder<CompanyDbContext>()
                 .UseInMemoryDatabase(Guid.NewGuid().ToString())
                 .EnableSensitiveDataLogging()
                 .Options;
 
-            _context = new CompanyDbContext(options);
-
-
+            _context = new CompanyDbContext(options, configuration);
         }
 
         public void AddCompanies(List<CompanyInformation> companiesInformation)

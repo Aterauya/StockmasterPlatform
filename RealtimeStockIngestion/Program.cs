@@ -1,9 +1,13 @@
 ﻿using Common.AzureServiceBusClient;
 using Common.BusClient;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using RealtimeStockApi;
+using RealtimeStockApi.EntityFrameworkInterfaces;
 using RealtimeStockApi.Interfaces;
+using RealtimeStockEntityFramework.Models;
+using RealtimeStockEntityFramework.Proxies;
 using RealtimeStockIngestion.Helpers;
 
 namespace RealtimeStockIngestion
@@ -19,10 +23,13 @@ namespace RealtimeStockIngestion
 
 
             var serviceProvider = new ServiceCollection()
-            .AddSingleton<IBusClient, AzureServiceBusClient>()
+            .AddSingleton<RealtimeStockContext>()
+            .AddTransient<IRealtimeStockWriteProxy, RealtimeStockWriteProxy>()
             .AddTransient<IRealtimeStockIngestion, RealtimeIngestionHelper>()
             .AddTransient<IRealtimeStockUrlHelper, RealtimeStockUrlHelper>()
             .AddSingleton(_configuration)
+
+
             .BuildServiceProvider();
 
             var realtimeStockIngestion = serviceProvider.GetService<IRealtimeStockIngestion>();

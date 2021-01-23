@@ -1,12 +1,8 @@
-﻿using Common.BusClient;
-using CompaniesApi.DataTransferObjects;
-using CompaniesApi.Events;
+﻿using CompaniesApi.DataTransferObjects;
 using CompaniesApi.Interfaces;
 using Coravel.Invocable;
 using Newtonsoft.Json;
-using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
 

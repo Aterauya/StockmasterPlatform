@@ -1,6 +1,7 @@
 ﻿using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.Extensions.Configuration;
 
 namespace RealtimeStockEntityFramework.Models
 {
@@ -10,19 +11,20 @@ namespace RealtimeStockEntityFramework.Models
         {
         }
 
-        public RealtimeStockContext(DbContextOptions<RealtimeStockContext> options)
-            : base(options)
+        public RealtimeStockContext(DbContextOptions options, IConfiguration configuration)
+            :base(options)
         {
+            _configuration = configuration;
         }
 
         public virtual DbSet<RealtimeStock> RealtimeStock { get; set; }
+        private readonly IConfiguration _configuration;
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             if (!optionsBuilder.IsConfigured)
             {
-#warning To protect potentially sensitive information in your connection string, you should move it out of source code. See http://go.microsoft.com/fwlink/?LinkId=723263 for guidance on storing connection strings.
-                optionsBuilder.UseSqlServer("Server=DESKTOP-E1IC06C;Database=RealtimeStock;Trusted_Connection=True;");
+                optionsBuilder.UseSqlServer(_configuration.GetConnectionString("RealtimeStockDbConnection"));
             }
         }
 

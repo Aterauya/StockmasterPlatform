@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using CompaniesApi.DataTransferObjects;
 using CompaniesApi.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
@@ -15,6 +16,7 @@ namespace CompaniesQueryService.Controllers
     /// </summary>
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize(AuthenticationSchemes = "Bearer")]
     public class CompaniesController : Controller
     {
         private readonly ICompanyReadProxy _readProxy;

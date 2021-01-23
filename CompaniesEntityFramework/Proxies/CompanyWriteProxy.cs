@@ -1,29 +1,37 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Linq;
 using System.Threading.Tasks;
 using CompaniesApi.DataTransferObjects;
 using CompaniesApi.Interfaces;
 using CompaniesEntityFramework.Models;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 
 namespace CompaniesEntityFramework.Proxies
 {
     public class CompanyWriteProxy : ICompanyWriteProxy
     {
         private readonly CompanyDbContext _dbContext;
-        public CompanyWriteProxy(CompanyDbContext dbContext)
+        private readonly ILogger<CompanyWriteProxy> _logger;
+        public CompanyWriteProxy(CompanyDbContext dbContext, ILogger<CompanyWriteProxy> logger)
         {
             _dbContext = dbContext;
+            _logger = logger;
         }
 
         public async Task AddCompanySymbols(List<StockSymbolDTO> stockSymbols)
         {
-            if (stockSymbols.Any())
+            if (!stockSymbols.Any())
             {
-                var existingSymbols = _dbContext.CompanySymbol.ToList();
-                List<StockSymbolDTO> copyOfStockSymbols = new List<StockSymbolDTO>();
-                copyOfStockSymbols.AddRange(stockSymbols);
+                
+                throw new DataException();
+            }
+
+            var existingSymbols = _dbContext.CompanySymbol.ToList();
+            var copyOfStockSymbols = new List<StockSymbolDTO>();
+            copyOfStockSymbols.AddRange(stockSymbols);
 
                 foreach (var symbol in stockSymbols)
                 {
@@ -48,9 +56,6 @@ namespace CompaniesEntityFramework.Proxies
                     await _dbContext.AddRangeAsync(symbols);
                     await _dbContext.SaveChangesAsync();
                 }
-            }
-           
-            
         }
 
         public async Task AddCompanyInformation(List<CompanyInformationDto> companyInformation)

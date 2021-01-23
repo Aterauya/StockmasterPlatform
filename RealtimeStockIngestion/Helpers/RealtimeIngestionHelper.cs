@@ -6,18 +6,24 @@ using RealtimeStockApi.Events;
 using RealtimeStockApi.Interfaces;
 using System;
 using System.Collections.Generic;
+using Common.Auth;
+using Microsoft.Extensions.Configuration;
+using RealtimeStockApi.EntityFrameworkInterfaces;
 using WebSocketSharp;
+using RestSharp;
 
 namespace RealtimeStockIngestion.Helpers
 {
     public class RealtimeIngestionHelper : IRealtimeStockIngestion
     {
-        private readonly IBusClient _busClient;
         private readonly IRealtimeStockUrlHelper _urlHelper;
-        public RealtimeIngestionHelper(IBusClient busClient, IRealtimeStockUrlHelper urlHelper)
+        private readonly IRealtimeStockWriteProxy _writeProxy;
+        private readonly IConfiguration _configuration;
+        public RealtimeIngestionHelper(IRealtimeStockUrlHelper urlHelper, IRealtimeStockWriteProxy writeProxy, IConfiguration configuration)
         {
-            _busClient = busClient;
             _urlHelper = urlHelper;
+            _writeProxy = writeProxy;
+            _configuration = configuration;
         }
 
         public void StartIngestion()
@@ -29,10 +35,7 @@ namespace RealtimeStockIngestion.Helpers
                     var dataJson = JsonConvert.DeserializeObject<StockDataIngestedDTO>(e.Data);
                     if (dataJson.Type.Equals("trade"))
                     {
-                        await _busClient.SendMessage(new RealtimeStockIngestedMessage
-                        { 
-                            StockIngested = dataJson,
-                        });
+                        _writeProxy.AddRealTimeStock(dataJson);
                     }
                 };
 
@@ -51,6 +54,7 @@ namespace RealtimeStockIngestion.Helpers
                             Type = "subscribe",
                             Symbol = item.StockSymbol
                         };
+                        Console.WriteLine("Listening for trades from " + stockRequest.Symbol);
                         ws.Send(JsonConvert.SerializeObject(stockRequest));
                     }
                 };
@@ -67,14 +71,46 @@ namespace RealtimeStockIngestion.Helpers
 
         public List<StockSymbolsDTO> GetStockSymbols()
         {
-            var stockRequest = new StockSymbolsDTO
+            var token = GetAuthToken();
+
+            var client = new RestClient($"{_configuration.GetSection("CompaniesServiceBaseUrl").Value}" +
+                                        $"{_configuration.GetSection("GetAllSymbolsEndpoint").Value}");
+
+            var request = new RestRequest(Method.GET);
+            request.AddHeader("authorization", $"{token.TokenType} {token.AccessToken}");
+            IRestResponse response = client.Execute(request);
+
+            var stockList = JsonConvert.DeserializeObject<List<StockSymbolsDTO>>(response.Content);
+
+            var copyOfStockList = new List<StockSymbolsDTO>();
+
+            var counter = 0;
+
+            foreach (var stock in stockList)
             {
-                StockId = Guid.NewGuid(),
-                StockSymbol = "BINANCE:BTCUSDT"
-            };
-            var stockList = new List<StockSymbolsDTO>();
-            stockList.Add(stockRequest);
-            return stockList;
+                if (counter % 5 == 0)
+                {
+                    copyOfStockList.Add(stock);
+                }
+                counter++;
+            }
+
+            return copyOfStockList;
+        }
+
+        private AuthToken GetAuthToken()
+        {
+            var tokenClient = new RestClient(_configuration.GetSection("AuthTokenUrl").Value);
+            var tokenRequest = new RestRequest(Method.POST); 
+            tokenRequest.AddHeader("content-type", "application/json");
+            var param = new RequestAuthToken(_configuration.GetSection("ClientId").Value, 
+                _configuration.GetSection("ClientSecret").Value, _configuration.GetSection("Audience").Value,
+                _configuration.GetSection("GrantType").Value);
+
+            tokenRequest.AddParameter("application/json", JsonConvert.SerializeObject(param), ParameterType.RequestBody);
+            IRestResponse tokenResponse = tokenClient.Execute(tokenRequest);
+
+            return JsonConvert.DeserializeObject<AuthToken>(tokenResponse.Content);
         }
     }
 }

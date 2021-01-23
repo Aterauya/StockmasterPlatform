@@ -30,11 +30,12 @@ namespace CompaniesQueryService
         // For more information on how to configure your application, visit https://go.microsoft.com/fwlink/?LinkID=398940
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddControllers();
+
             // Inject services
-            services.AddDbContext<CompanyDbContext>(options => options.UseSqlServer(_configuration.GetConnectionString("CompanyDbConnection")));
+            services.AddDbContext<CompanyDbContext>();
             services.AddTransient<ICompanyReadProxy, CompanyReadProxy>();
-            services.AddMvcCore()
-                .AddApiExplorer();
+
 
             // Add swagger documentation
             services.AddSwaggerGen(c =>
@@ -51,10 +52,13 @@ namespace CompaniesQueryService
             });
 
             // Add Authentication
+            services.AddMvc();
+
             services.AddAuthentication(options =>
             {
                 options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
                 options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+
             }).AddJwtBearer(options =>
             {
                 options.Authority = _configuration.GetSection("AuthAuthority").Value;
@@ -72,22 +76,23 @@ namespace CompaniesQueryService
 
             app.UseSwagger();
 
-
             app.UseSwaggerUI(c =>
             {
                 c.SwaggerEndpoint("/swagger/v1/swagger.json", "My API V1");
             });
 
-            app.UseAuthentication();
 
             app.UseRouting();
 
+            app.UseAuthentication();
+
+            app.UseAuthorization();
+
             app.UseEndpoints(endpoints =>
             {
-                endpoints.MapGet("/", async context =>
-                {
-                    await context.Response.WriteAsync("Hello World!");
-                });
+                endpoints.MapControllerRoute(
+                    name: "default",
+                    pattern: "{controller=Home}/{action=Index}/{id?}");
             });
         }
     }

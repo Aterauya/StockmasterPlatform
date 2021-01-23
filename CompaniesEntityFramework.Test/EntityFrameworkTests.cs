@@ -1,11 +1,18 @@
 using System;
+using System.Collections.Generic;
 using System.Data;
+using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
+using CompaniesApi.DataTransferObjects;
 using CompaniesEntityFramework.Models;
 using CompaniesEntityFramework.Proxies;
 using CompaniesEntityFramework.Test.DatabaseMocks;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using Microsoft.IdentityModel.Tokens;
 using Moq;
 using NUnit.Framework;
 
@@ -13,9 +20,41 @@ namespace CompaniesEntityFramework.Test
 {
     public class Tests
     {
+        private static Mock<IConfiguration> mockConfiguration;
+
+        private static DbSet<CompanySymbol> GetQueryableCompanySymbolMockDbSet(List<CompanySymbol> sourceList)
+        {
+            var queryable = sourceList.AsQueryable();
+            var dbSet = new Mock<DbSet<CompanySymbol>>();
+            dbSet.As<IQueryable<CompanySymbol>>().Setup(m => m.Provider).Returns(queryable.Provider);
+            dbSet.As<IQueryable<CompanySymbol>>().Setup(m => m.Expression).Returns(queryable.Expression);
+            dbSet.As<IQueryable<CompanySymbol>>().Setup(m => m.ElementType).Returns(queryable.ElementType);
+            dbSet.As<IQueryable<CompanySymbol>>().Setup(m => m.GetEnumerator()).Returns(() => queryable.GetEnumerator());
+            dbSet.Setup(d => d.Add(It.IsAny<CompanySymbol>())).Callback<CompanySymbol>(s => sourceList.Add(s));
+            return dbSet.Object;
+        }
+
+        private static DbSet<CompanyInformation> GetQueryableCompanyInformationMockDbSet(
+            List<CompanyInformation> sourceList)
+        {
+            var queryable = sourceList.AsQueryable();
+            var dbSet = new Mock<DbSet<CompanyInformation>>();
+            dbSet.As<IQueryable<CompanyInformation>>().Setup(m => m.Provider).Returns(queryable.Provider);
+            dbSet.As<IQueryable<CompanyInformation>>().Setup(m => m.Expression).Returns(queryable.Expression);
+            dbSet.As<IQueryable<CompanyInformation>>().Setup(m => m.ElementType).Returns(queryable.ElementType);
+            dbSet.As<IQueryable<CompanyInformation>>().Setup(m => m.GetEnumerator()).Returns(() => queryable.GetEnumerator());
+            dbSet.Setup(d => d.Add(It.IsAny<CompanyInformation>())).Callback<CompanyInformation>(s => sourceList.Add(s));
+            return dbSet.Object;
+        }
+
         [SetUp]
         public void Setup()
         {
+            var mockConfSection = new Mock<IConfigurationSection>();
+            mockConfSection.SetupGet(m => m[It.Is<string>(s => s == "testDB")]).Returns("mock value");
+
+            mockConfiguration = new Mock<IConfiguration>();
+            mockConfiguration.Setup(a => a.GetSection(It.Is<string>(s => s == "ConnectionStrings"))).Returns(mockConfSection.Object);
         }
 
         [Test]
@@ -29,7 +68,7 @@ namespace CompaniesEntityFramework.Test
             var factory = serviceProvider.GetService<ILoggerFactory>();
             var logger = factory.CreateLogger<CompanyReadProxy>();
 
-            var testDb = new TestDb();
+            var testDb = new CompaniesTestDb(mockConfiguration.Object);
 
             testDb.AddCompaniesSymbols(testDb.GetSymbols());
 
@@ -55,7 +94,7 @@ namespace CompaniesEntityFramework.Test
             var factory = serviceProvider.GetService<ILoggerFactory>();
             var logger = factory.CreateLogger<CompanyReadProxy>();
 
-            var testDb = new TestDb();
+            var testDb = new CompaniesTestDb(mockConfiguration.Object);
 
 
             var readProxy = new CompanyReadProxy(testDb.GetContext(), logger);
@@ -76,7 +115,7 @@ namespace CompaniesEntityFramework.Test
             var factory = serviceProvider.GetService<ILoggerFactory>();
             var logger = factory.CreateLogger<CompanyReadProxy>();
 
-            var testDb = new TestDb();
+            var testDb = new CompaniesTestDb(mockConfiguration.Object);
 
             testDb.AddCompanies(testDb.GetCompaniesInformation());
 
@@ -102,7 +141,7 @@ namespace CompaniesEntityFramework.Test
             var factory = serviceProvider.GetService<ILoggerFactory>();
             var logger = factory.CreateLogger<CompanyReadProxy>();
 
-            var testDb = new TestDb();
+            var testDb = new CompaniesTestDb(mockConfiguration.Object);
 
 
             var readProxy = new CompanyReadProxy(testDb.GetContext(), logger);
@@ -123,7 +162,7 @@ namespace CompaniesEntityFramework.Test
             var factory = serviceProvider.GetService<ILoggerFactory>();
             var logger = factory.CreateLogger<CompanyReadProxy>();
 
-            var testDb = new TestDb();
+            var testDb = new CompaniesTestDb(mockConfiguration.Object);
 
             testDb.AddCompanies(testDb.GetCompaniesInformation());
 
@@ -147,7 +186,7 @@ namespace CompaniesEntityFramework.Test
             var factory = serviceProvider.GetService<ILoggerFactory>();
             var logger = factory.CreateLogger<CompanyReadProxy>();
 
-            var testDb = new TestDb();
+            var testDb = new CompaniesTestDb(mockConfiguration.Object);
 
 
             var readProxy = new CompanyReadProxy(testDb.GetContext(), logger);
@@ -155,6 +194,199 @@ namespace CompaniesEntityFramework.Test
             // Assert
             var ex = Assert.ThrowsAsync<DataException>(async () => await readProxy.GetCompanyInformation(new Guid("3c1ee777-ac41-456b-9e00-2993668d90d0")));
             Assert.That(ex.Message, Is.EqualTo("Data Exception."));
+        }
+
+        [Test]
+        public async Task AddCompanySymbols_GivenDataNotInDb_AddsData()
+        {
+            // Arrange
+            var mockContext = new Mock<CompanyDbContext>();
+
+
+            var companySymbolsInDb = new List<CompanySymbol>();
+
+            mockContext.Setup(c => c.CompanySymbol)
+                .Returns(GetQueryableCompanySymbolMockDbSet(companySymbolsInDb));
+
+            var serviceProvider = new ServiceCollection()
+                .AddLogging()
+                .BuildServiceProvider();
+
+            var factory = serviceProvider.GetService<ILoggerFactory>();
+            var logger = factory.CreateLogger<CompanyWriteProxy>();
+
+            var writeProxy = new CompanyWriteProxy(mockContext.Object, logger);
+
+            var companySymbols = new List<StockSymbolDTO>
+            {
+                new StockSymbolDTO
+                {
+                    SymbolId = Guid.NewGuid(),
+                    Symbol = "Stock symbol 1"
+                },
+                new StockSymbolDTO
+                {
+                    SymbolId = Guid.NewGuid(),
+                    Symbol = "Stock symbol 2"
+                }
+            };
+
+            // Act
+            await writeProxy.AddCompanySymbols(companySymbols);
+
+            // Assert
+            mockContext.Verify(m => m.SaveChangesAsync(It.IsAny<CancellationToken>()), Times.Once);
+        }
+
+        [Test]
+        public async Task AddCompanySymbols_GivenSymbolsAlreadyInDb_AddsNothing()
+        {
+            // Arrange
+            var mockContext = new Mock<CompanyDbContext>();
+
+
+            var companySymbolsInDb = new List<CompanySymbol>
+            {
+                new CompanySymbol
+                {
+                    SymbolId = Guid.NewGuid(),
+                    Symbol = "Stock symbol 1"
+                },
+                new CompanySymbol
+                {
+                    SymbolId = Guid.NewGuid(),
+                    Symbol = "Stock symbol 2"
+                }
+
+            };
+
+            mockContext.Setup(c => c.CompanySymbol)
+            .Returns(GetQueryableCompanySymbolMockDbSet(companySymbolsInDb));
+
+            var serviceProvider = new ServiceCollection()
+                .AddLogging()
+                .BuildServiceProvider();
+
+            var factory = serviceProvider.GetService<ILoggerFactory>();
+            var logger = factory.CreateLogger<CompanyWriteProxy>();
+
+            var writeProxy = new CompanyWriteProxy(mockContext.Object, logger);
+
+            var companySymbols = new List<StockSymbolDTO>
+            {
+                new StockSymbolDTO
+                {
+                    SymbolId = Guid.NewGuid(),
+                    Symbol = "Stock symbol 1"
+                },
+                new StockSymbolDTO
+                {
+                    SymbolId = Guid.NewGuid(),
+                    Symbol = "Stock symbol 2"
+                }
+            };
+
+            // Act
+            await writeProxy.AddCompanySymbols(companySymbols);
+
+            // Assert
+            mockContext.Verify(m => m.SaveChangesAsync(It.IsAny<CancellationToken>()), Times.Never);
+        }
+
+        [Test]
+        public async Task AddCompanyInformation_GivenDataNotInDb_AddsDataToDb()
+        {
+            // Arrange
+            var mockContext = new Mock<CompanyDbContext>();
+
+
+            var companyInformationsInDb = new List<CompanyInformation>();
+
+            mockContext.Setup(c => c.CompanyInformation)
+                .Returns(GetQueryableCompanyInformationMockDbSet(companyInformationsInDb));
+
+            var serviceProvider = new ServiceCollection()
+                .AddLogging()
+                .BuildServiceProvider();
+
+            var factory = serviceProvider.GetService<ILoggerFactory>();
+            var logger = factory.CreateLogger<CompanyWriteProxy>();
+
+            var writeProxy = new CompanyWriteProxy(mockContext.Object, logger);
+
+            var companyInformation = new List<CompanyInformationDto>
+            {
+                new CompanyInformationDto()
+                {
+                    CompanyId = Guid.NewGuid(),
+                    Name = "Company name 1"
+                },
+                new CompanyInformationDto
+                {
+                    CompanyId = Guid.NewGuid(),
+                    Name = "Company name 2"
+                }
+            };
+
+            // Act
+            await writeProxy.AddCompanyInformation(companyInformation);
+
+            // Assert
+            mockContext.Verify(m => m.SaveChangesAsync(It.IsAny<CancellationToken>()), Times.Once);
+        }
+
+        [Test]
+        public async Task AddCompanyInformation_GivenDataInDb_AddsNoDataToDb()
+        {
+            // Arrange
+            var mockContext = new Mock<CompanyDbContext>();
+
+
+            var companyInformationsInDb = new List<CompanyInformation>()
+            {
+                new CompanyInformation()
+                {
+                    CompanyId = Guid.NewGuid(),
+                    Name = "Company name 1"
+                },
+                new CompanyInformation
+                {
+                    CompanyId = Guid.NewGuid(),
+                    Name = "Company name 2"
+                }
+            };
+
+            mockContext.Setup(c => c.CompanyInformation)
+                .Returns(GetQueryableCompanyInformationMockDbSet(companyInformationsInDb));
+
+            var serviceProvider = new ServiceCollection()
+                .AddLogging()
+                .BuildServiceProvider();
+
+            var factory = serviceProvider.GetService<ILoggerFactory>();
+            var logger = factory.CreateLogger<CompanyWriteProxy>();
+
+            var writeProxy = new CompanyWriteProxy(mockContext.Object, logger);
+
+            var companyInformation = new List<CompanyInformationDto>
+            {
+                new CompanyInformationDto
+                {
+                    CompanyId = Guid.NewGuid(),
+                    Name = "Company name 1"
+                },
+                new CompanyInformationDto
+                {
+                    CompanyId = Guid.NewGuid(),
+                    Name = "Company name 2"
+                }
+            };
+
+            // Act
+            await writeProxy.AddCompanyInformation(companyInformation);
+
+            // Assert
+            mockContext.Verify(m => m.SaveChangesAsync(It.IsAny<CancellationToken>()), Times.Never);
         }
     }
 }

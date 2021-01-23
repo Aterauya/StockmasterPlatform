@@ -11,8 +11,8 @@ namespace RealtimeStockCommandService.MessageHandlers
 {
     public class RealtimeStockMessageHandler : IBusMessageHandler
     {
-        private readonly IRealtimeStockEntityFrameworkWriteProxy _realtimeStockWriteProxy;
-        public RealtimeStockMessageHandler(IRealtimeStockEntityFrameworkWriteProxy realtimeStockWriteProxy)
+        private readonly IRealtimeStockWriteProxy _realtimeStockWriteProxy;
+        public RealtimeStockMessageHandler(IRealtimeStockWriteProxy realtimeStockWriteProxy)
         {
             _realtimeStockWriteProxy = realtimeStockWriteProxy;
         }
@@ -21,7 +21,6 @@ namespace RealtimeStockCommandService.MessageHandlers
             var data = JsonConvert.DeserializeObject<RealtimeStockIngestedMessage>(Encoding.UTF8.GetString(message.Body));
             var payload = new StockDataIngestedDTO()
             {
-                Id = Guid.NewGuid(),
                 StockIngested = data.StockIngested.StockIngested,
                 Type = data.StockIngested.Type
             };
