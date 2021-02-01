@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
+using System.Security.Cryptography.X509Certificates;
 using System.Threading.Tasks;
 using CompaniesApi.DataTransferObjects;
 using CompaniesApi.Interfaces;
@@ -15,6 +16,7 @@ namespace CompaniesEntityFramework.Proxies
     {
         private readonly CompanyDbContext _dbContext;
         private readonly ILogger<CompanyWriteProxy> _logger;
+
         public CompanyWriteProxy(CompanyDbContext dbContext, ILogger<CompanyWriteProxy> logger)
         {
             _dbContext = dbContext;
@@ -25,7 +27,7 @@ namespace CompaniesEntityFramework.Proxies
         {
             if (!stockSymbols.Any())
             {
-                
+
                 throw new DataException();
             }
 
@@ -33,71 +35,66 @@ namespace CompaniesEntityFramework.Proxies
             var copyOfStockSymbols = new List<StockSymbolDTO>();
             copyOfStockSymbols.AddRange(stockSymbols);
 
-                foreach (var symbol in stockSymbols)
+            foreach (var symbol in stockSymbols)
+            {
+                foreach (var existingSymbol in existingSymbols)
                 {
-                    foreach (var existingSymbol in existingSymbols)
+                    if (existingSymbol.Symbol.Equals(symbol.Symbol))
                     {
-                        if (existingSymbol.Symbol.Equals(symbol.Symbol))
-                        {
-                            copyOfStockSymbols.Remove(symbol);
-                        }
+                        copyOfStockSymbols.Remove(symbol);
                     }
                 }
+            }
 
-                if (copyOfStockSymbols.Any())
-                {
-                    var symbols = copyOfStockSymbols
-                        .Select(s => new CompanySymbol
-                        {
-                            SymbolId = Guid.NewGuid(),
-                            Symbol = s.Symbol
-                        }).ToList();
+            if (copyOfStockSymbols.Any())
+            {
+                var symbols = copyOfStockSymbols
+                    .Select(s => new CompanySymbol
+                    {
+                        SymbolId = Guid.NewGuid(),
+                        Symbol = s.Symbol
+                    }).ToList();
 
-                    await _dbContext.AddRangeAsync(symbols);
-                    await _dbContext.SaveChangesAsync();
-                }
+                await _dbContext.AddRangeAsync(symbols);
+                await _dbContext.SaveChangesAsync();
+            }
         }
 
-        public async Task AddCompanyInformation(List<CompanyInformationDto> companyInformation)
+        public async Task AddCompanyInformation(CompanyInformationDto companyInformation)
         {
-            if (companyInformation.Any())
+            if (companyInformation != null && !string.IsNullOrEmpty(companyInformation.Name))
             {
                 var existingInformation = _dbContext.CompanyInformation.ToList();
-                var copyOfCompanyInformation = new List<CompanyInformationDto>();
-                copyOfCompanyInformation.AddRange(companyInformation);
 
-                foreach (var cIinformation in companyInformation)
+                var existsInDb = false;
+
+                foreach (var eInformation in existingInformation)
                 {
-                    foreach (var eInformation in existingInformation)
+                    if (eInformation.Name.Equals(companyInformation.Name))
                     {
-                        if (eInformation.SymbolId.Equals(cIinformation.SymbolId))
-                        {
-                            copyOfCompanyInformation.Remove(cIinformation);
-                        }
+                        existsInDb = true;
                     }
                 }
 
-                if (copyOfCompanyInformation.Any())
+                if (!existsInDb)
                 {
-                    var information = copyOfCompanyInformation
-                        .Select(s => new CompanyInformation
-                        {
-                            CompanyId = Guid.NewGuid(),
-                            SymbolId = s.SymbolId,
-                            Name = s.Name,
-                            Exchange = s.Exchange,
-                            Ipo = s.Ipo ?? new DateTime(),
-                            MarketCapitalization = s.MarketCapitalization,
-                            Url = s.Url,
-                            OutstandingShares = s.OutstandingShares,
-                            Logo = s.Logo,
-                            CountryName = s.CountryName,
-                            CurrencyName = s.CurrencyName,
-                            IndustryName = s.IndustryName
+                    var information = new CompanyInformation
+                    {
+                        CompanyId = Guid.NewGuid(),
+                        SymbolId = companyInformation.SymbolId,
+                        Name = companyInformation.Name,
+                        Exchange = companyInformation.Exchange,
+                        Ipo = companyInformation.Ipo ?? new DateTime(),
+                        MarketCapitalization = companyInformation.MarketCapitalization,
+                        Url = companyInformation.Url,
+                        OutstandingShares = companyInformation.OutstandingShares,
+                        Logo = companyInformation.Logo,
+                        CountryName = companyInformation.CountryName,
+                        CurrencyName = companyInformation.CurrencyName,
+                        IndustryName = companyInformation.IndustryName
+                    };
 
-                        }).ToList();
-
-                    await _dbContext.AddRangeAsync(information);
+                    await _dbContext.AddAsync(information);
                     await _dbContext.SaveChangesAsync();
                 }
             }

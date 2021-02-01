@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Automatonymous;
 using Common.AzureServiceBusClient;
 using Common.BusClient;
 using CompaniesApi.Interfaces;
@@ -21,19 +22,21 @@ namespace CompaniesIngestionWorker
         public static void Main(string[] args)
         {
             IHost host = CreateHostBuilder(args).Build();
+            var dateTime = DateTime.Now;
             host.Services
                 .UseScheduler(scheduler =>
                 {
                     scheduler.OnWorker("SymbolIngestion")
                         .Schedule<CompaniesSymbolIngestionHelper>()
-                        .DailyAtHour(Convert.ToInt16(GetConfiguration().GetSection("scheduledWakeup").Value));
+                        .DailyAt(Convert.ToInt16(GetConfiguration().GetSection("IngestionWorkerStartHour").Value),
+                            Convert.ToInt16(GetConfiguration().GetSection("IngestionWorkerStartMinute").Value));
 
                     scheduler.OnWorker("CompanyInformationIngestion")
                         .Schedule<CompanyInformationIngestionHelper>()
-                        .Hourly();
-                    //.DailyAtHour(Convert.ToInt16(GetConfiguration().GetSection("scheduledWakeup").Value));
+                        .DailyAt(Convert.ToInt16(GetConfiguration().GetSection("IngestionWorkerStartHour").Value),
+                            Convert.ToInt16(GetConfiguration().GetSection("IngestionWorkerStartMinute").Value));
                 });
-                host.Run();
+            host.Run();
         }
 
         private static IConfiguration GetConfiguration()

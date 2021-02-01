@@ -13,6 +13,7 @@ namespace RealtimeStockQueryService.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
+    [Authorize]
     public class RealtimeStockController : Controller
     {
         private readonly IRealtimeStockReadProxy _readProxy;

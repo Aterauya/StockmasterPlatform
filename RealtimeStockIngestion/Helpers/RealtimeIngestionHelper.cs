@@ -104,7 +104,7 @@ namespace RealtimeStockIngestion.Helpers
             var tokenRequest = new RestRequest(Method.POST); 
             tokenRequest.AddHeader("content-type", "application/json");
             var param = new RequestAuthToken(_configuration.GetSection("ClientId").Value, 
-                _configuration.GetSection("ClientSecret").Value, _configuration.GetSection("Audience").Value,
+                _configuration.GetSection("ClientSecret").Value, _configuration.GetSection("CompanyInformationAudience").Value,
                 _configuration.GetSection("GrantType").Value);
 
             tokenRequest.AddParameter("application/json", JsonConvert.SerializeObject(param), ParameterType.RequestBody);

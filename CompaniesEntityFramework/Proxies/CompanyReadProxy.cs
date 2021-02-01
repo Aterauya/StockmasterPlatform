@@ -37,7 +37,9 @@ namespace CompaniesEntityFramework.Proxies
                 {
                     SymbolId = cs.SymbolId,
                     Symbol = cs.Symbol
-                }).ToListAsync();
+                })
+                .OrderBy(cs => cs.Symbol)
+                .ToListAsync();
         }
 
         public async Task<List<CompanyInformationDto>> GetAllCompanyInformation()
@@ -48,12 +50,14 @@ namespace CompaniesEntityFramework.Proxies
                 throw new DataException();
             }
 
-            return await _dbContext
+            var information = await _dbContext
                 .CompanyInformation
+                .Include(s => s.Symbol)
                 .Select(ci => new CompanyInformationDto
                 {
                     CompanyId = ci.CompanyId,
                     SymbolId = ci.SymbolId,
+                    CompanySymbol = ci.Symbol.Symbol,
                     Name = ci.Name,
                     Exchange = ci.Exchange,
                     Ipo = ci.Ipo,
@@ -65,6 +69,8 @@ namespace CompaniesEntityFramework.Proxies
                     CurrencyName = ci.CurrencyName,
                     IndustryName = ci.IndustryName
                 }).ToListAsync();
+
+            return information;
         }
 
         public async Task<CompanyInformationDto> GetCompanyInformation(Guid companyId)

@@ -68,16 +68,20 @@ namespace CompaniesEntityFramework.Test.DatabaseMocks
                 new CompanyInformation
                 {
                     CompanyId = new Guid("3c1ee777-ac41-456b-9e00-2993668d90d0"),
+                    SymbolId = Guid.Parse("10f83f75-8d49-454e-8d05-5a4ddf5ec4b7"),
                     Name = "Test company 1"
                 },
                 new CompanyInformation
                 {
                     CompanyId = new Guid("abb0784a-cfe2-49f5-80bb-541bb39f5317"),
+                    SymbolId = Guid.Parse("10f83f75-8d49-454e-8d05-5a4ddf5ec4b7"),
+
                     Name = "Test company 2"
                 },
                 new CompanyInformation
                 {
                     CompanyId = new Guid("8ec5bc71-6722-4f3c-a656-402fbda4de58"),
+                    SymbolId = Guid.Parse("10f83f75-8d49-454e-8d05-5a4ddf5ec4b7"),
                     Name = "Test company 3"
                 }
             };

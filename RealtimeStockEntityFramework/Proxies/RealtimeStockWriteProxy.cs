@@ -25,7 +25,7 @@ namespace RealtimeStockEntityFramework.Proxies
                {
                    RealtimeStockId = Guid.NewGuid(),
                    DateTimeTraded = today.AddTicks(stock.DateTimeTraded),
-                    Price = Convert.ToDecimal(stock.Price),
+                   Price = Convert.ToDecimal(stock.Price),
                    StockSymbol = stock.StockSymbol,
                    Volume = Convert.ToDecimal(stock.Volume)
                });

@@ -118,6 +118,7 @@ namespace CompaniesEntityFramework.Test
             var testDb = new CompaniesTestDb(mockConfiguration.Object);
 
             testDb.AddCompanies(testDb.GetCompaniesInformation());
+            testDb.AddCompaniesSymbols(testDb.GetSymbols());
 
             var readProxy = new CompanyReadProxy(testDb.GetContext(), logger);
 
@@ -314,18 +315,10 @@ namespace CompaniesEntityFramework.Test
 
             var writeProxy = new CompanyWriteProxy(mockContext.Object, logger);
 
-            var companyInformation = new List<CompanyInformationDto>
+            var companyInformation = new CompanyInformationDto
             {
-                new CompanyInformationDto()
-                {
-                    CompanyId = Guid.NewGuid(),
-                    Name = "Company name 1"
-                },
-                new CompanyInformationDto
-                {
-                    CompanyId = Guid.NewGuid(),
-                    Name = "Company name 2"
-                }
+                CompanyId = Guid.NewGuid(),
+                Name = "Company name 1"
             };
 
             // Act
@@ -368,18 +361,10 @@ namespace CompaniesEntityFramework.Test
 
             var writeProxy = new CompanyWriteProxy(mockContext.Object, logger);
 
-            var companyInformation = new List<CompanyInformationDto>
+            var companyInformation = new CompanyInformationDto
             {
-                new CompanyInformationDto
-                {
-                    CompanyId = Guid.NewGuid(),
-                    Name = "Company name 1"
-                },
-                new CompanyInformationDto
-                {
-                    CompanyId = Guid.NewGuid(),
-                    Name = "Company name 2"
-                }
+                CompanyId = Guid.NewGuid(),
+                Name = "Company name 1"
             };
 
             // Act

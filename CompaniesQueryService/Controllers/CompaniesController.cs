@@ -16,7 +16,7 @@ namespace CompaniesQueryService.Controllers
     /// </summary>
     [Route("api/[controller]")]
     [ApiController]
-    [Authorize(AuthenticationSchemes = "Bearer")]
+    [Authorize]
     public class CompaniesController : Controller
     {
         private readonly ICompanyReadProxy _readProxy;

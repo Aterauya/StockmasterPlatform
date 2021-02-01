@@ -10,6 +10,6 @@ namespace CompaniesApi.Interfaces
     {
         Task AddCompanySymbols(List<StockSymbolDTO> stockSymbols);
 
-        Task AddCompanyInformation(List<CompanyInformationDto> companyInformation);
+        Task AddCompanyInformation(CompanyInformationDto companyInformation);
     }
 }

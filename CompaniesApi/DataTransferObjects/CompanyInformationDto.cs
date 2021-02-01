@@ -9,10 +9,12 @@ namespace CompaniesApi.DataTransferObjects
     {
         public Guid CompanyId { get; set; }
         public Guid SymbolId { get; set; }
+        public string CompanySymbol { get; set; }
         public string Name { get; set; }
         public string Exchange { get; set; }
         public DateTime? Ipo { get; set; }
         public decimal MarketCapitalization { get; set; }
+        [JsonProperty("shareOutstanding")]
         public float OutstandingShares { get; set; }
         [JsonProperty("weburl")]
         public string Url { get; set; }
