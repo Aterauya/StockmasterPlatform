@@ -9,10 +9,13 @@ using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Configuration;
+using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.OpenApi.Models;
 using RealtimeStockApi.EntityFrameworkInterfaces;
 using RealtimeStockEntityFramework.Models;
 using RealtimeStockEntityFramework.Proxies;
@@ -45,6 +48,20 @@ namespace RealtimeStockQueryService
                     options.Authority = _configuration.GetSection("AuthAuthority").Value;
                     options.Audience = _configuration.GetSection("AuthAudience").Value;
                 });
+
+            // Add swagger
+            services.AddSwaggerGen(c =>
+            {
+                c.SwaggerDoc("v1", new OpenApiInfo
+                {
+                    Title = "Companies Stock Query Service",
+                    Description = "An Asp.net core 3.1 micro service for getting companies information built as part of my final year project",
+                });
+                // Set the comments path for the Swagger JSON and UI.
+                var xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
+                var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
+                c.IncludeXmlComments(xmlPath);
+            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -54,6 +71,13 @@ namespace RealtimeStockQueryService
             {
                 app.UseDeveloperExceptionPage();
             }
+
+            app.UseSwagger();
+
+            app.UseSwaggerUI(c =>
+            {
+                c.SwaggerEndpoint("/swagger/v1/swagger.json", "My API V1");
+            });
 
             app.UseHttpsRedirection();
 
