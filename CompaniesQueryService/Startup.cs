@@ -42,8 +42,8 @@ namespace CompaniesQueryService
             {
                 c.SwaggerDoc("v1", new OpenApiInfo
                 {
-                    Title = "Product API",
-                    Description = "An AspNet Core 3.1 API for our final year Cloud System Dev Ops module",
+                    Title = "Companies Stock Query Service",
+                    Description = "An Asp.net core 3.1 micro service for getting companies information built as part of my final year project",
                 });
                 // Set the comments path for the Swagger JSON and UI.
                 var xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
