@@ -12,12 +12,39 @@ using Newtonsoft.Json;
 
 namespace CompaniesIngestionWorker.Helpers
 {
+    /// <summary>
+    /// The company information ingestion helper
+    /// </summary>
+    /// <seealso cref="Coravel.Invocable.IInvocable" />
     public class CompanyInformationIngestionHelper : IInvocable
     {
+        /// <summary>
+        /// The read proxy
+        /// </summary>
         private readonly ICompanyReadProxy _readProxy;
+
+        /// <summary>
+        /// The write proxy
+        /// </summary>
         private readonly ICompanyWriteProxy _writeProxy;
+
+        /// <summary>
+        /// The URL helper
+        /// </summary>
         private readonly ICompanyUrlHelper _urlHelper;
+
+        /// <summary>
+        /// The logger
+        /// </summary>
         private readonly ILogger<CompanyInformationIngestionHelper> _logger;
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="CompanyInformationIngestionHelper"/> class.
+        /// </summary>
+        /// <param name="readProxy">The read proxy.</param>
+        /// <param name="writeProxy">The write proxy.</param>
+        /// <param name="urlHelper">The URL helper.</param>
+        /// <param name="logger">The logger.</param>
         public CompanyInformationIngestionHelper(ICompanyReadProxy readProxy, ICompanyWriteProxy writeProxy, ICompanyUrlHelper urlHelper, 
             ILogger<CompanyInformationIngestionHelper> logger)
         {
@@ -26,6 +53,10 @@ namespace CompaniesIngestionWorker.Helpers
             _urlHelper = urlHelper;
             _logger = logger;
         }
+
+        /// <summary>
+        /// Invokes this instance.
+        /// </summary>
         public async Task Invoke()
         {
             var symbols = await GetCompanySymbols();
@@ -42,6 +73,11 @@ namespace CompaniesIngestionWorker.Helpers
             }
         }
 
+        /// <summary>
+        /// Gets the company information.
+        /// </summary>
+        /// <param name="stockSymbol">The stock symbol.</param>
+        /// <returns>Company information</returns>
         private async Task<CompanyInformationDto> GetCompanyInformation(StockSymbolDTO stockSymbol)
         {
             using (HttpClient client = new HttpClient())
@@ -75,6 +111,10 @@ namespace CompaniesIngestionWorker.Helpers
             }
         }
 
+        /// <summary>
+        /// Gets the company symbols.
+        /// </summary>
+        /// <returns>A list of stock symbols</returns>
         private async Task<List<StockSymbolDTO>> GetCompanySymbols()
         {
             return await _readProxy.GetCompanySymbols();

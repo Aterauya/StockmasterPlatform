@@ -14,6 +14,10 @@ using RestSharp;
 
 namespace RealtimeStockIngestion.Helpers
 {
+    /// <summary>
+    /// Realtime ingestion helper
+    /// </summary>
+    /// <seealso cref="RealtimeStockApi.IRealtimeStockIngestion" />
     public class RealtimeIngestionHelper : IRealtimeStockIngestion
     {
         private readonly IRealtimeStockUrlHelper _urlHelper;

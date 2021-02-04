@@ -19,13 +19,25 @@ using Microsoft.OpenApi.Models;
 
 namespace CompaniesQueryService
 {
+    /// <summary>
+    /// The Startup class
+    /// </summary>
     public class Startup
     {
+        /// <summary>
+        /// The configuration
+        /// </summary>
         private readonly IConfiguration _configuration;
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="Startup"/> class.
+        /// </summary>
+        /// <param name="configuration">The configuration.</param>
         public Startup(IConfiguration configuration)
         {
             _configuration = configuration;
         }
+
         // This method gets called by the runtime. Use this method to add services to the container.
         // For more information on how to configure your application, visit https://go.microsoft.com/fwlink/?LinkID=398940
         public void ConfigureServices(IServiceCollection services)

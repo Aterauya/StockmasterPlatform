@@ -22,6 +22,9 @@ using RealtimeStockEntityFramework.Proxies;
 
 namespace RealtimeStockQueryService
 {
+    /// <summary>
+    /// The startup class
+    /// </summary>
     public class Startup
     {
         public Startup(IConfiguration configuration)

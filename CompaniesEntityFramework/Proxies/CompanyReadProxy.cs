@@ -12,17 +12,40 @@ using Microsoft.Extensions.Logging;
 
 namespace CompaniesEntityFramework.Proxies
 {
+    /// <summary>
+    /// The company read proxy
+    /// </summary>
+    /// <seealso cref="CompaniesApi.Interfaces.ICompanyReadProxy" />
     public class CompanyReadProxy : ICompanyReadProxy
     {
+        /// <summary>
+        /// The database context
+        /// </summary>
         private readonly CompanyDbContext _dbContext;
+
+        /// <summary>
+        /// The logger
+        /// </summary>
         private readonly ILogger<CompanyReadProxy> _logger;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="CompanyReadProxy"/> class.
+        /// </summary>
+        /// <param name="dbContext">The database context.</param>
+        /// <param name="logger">The logger.</param>
         public CompanyReadProxy(CompanyDbContext dbContext, ILogger<CompanyReadProxy> logger)
         {
             _dbContext = dbContext;
             _logger = logger;
         }
 
+        /// <summary>
+        /// Gets the company symbols.
+        /// </summary>
+        /// <returns>
+        /// The companies stock symbols
+        /// </returns>
+        /// <exception cref="DataException"></exception>
         public async Task<List<StockSymbolDTO>> GetCompanySymbols()
         {
             if (!_dbContext.CompanySymbol.Any())
@@ -42,6 +65,13 @@ namespace CompaniesEntityFramework.Proxies
                 .ToListAsync();
         }
 
+        /// <summary>
+        /// Gets all company information.
+        /// </summary>
+        /// <returns>
+        /// All of the companies information
+        /// </returns>
+        /// <exception cref="DataException"></exception>
         public async Task<List<CompanyInformationDto>> GetAllCompanyInformation()
         {
             if (!_dbContext.CompanyInformation.Any())
@@ -73,6 +103,14 @@ namespace CompaniesEntityFramework.Proxies
             return information;
         }
 
+        /// <summary>
+        /// Gets the company information.
+        /// </summary>
+        /// <param name="companyId">The company identifier.</param>
+        /// <returns>
+        /// The specific companies information
+        /// </returns>
+        /// <exception cref="DataException"></exception>
         public async Task<CompanyInformationDto> GetCompanyInformation(Guid companyId)
         {
             if (!_dbContext.CompanyInformation.Any() || companyId == null)

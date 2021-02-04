@@ -5,6 +5,9 @@ using Newtonsoft.Json;
 
 namespace Common.Auth
 {
+    /// <summary>
+    /// The request auth token object
+    /// </summary>
     public class RequestAuthToken
     {
         [JsonProperty("client_id")]

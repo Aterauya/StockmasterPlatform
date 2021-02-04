@@ -12,6 +12,10 @@ using RealtimeStockEntityFramework.Models;
 
 namespace RealtimeStockEntityFramework.Proxies
 {
+    /// <summary>
+    /// The realtime stock read proxy
+    /// </summary>
+    /// <seealso cref="RealtimeStockApi.EntityFrameworkInterfaces.IRealtimeStockReadProxy" />
     public class RealtimeStockReadProxy : IRealtimeStockReadProxy
     {
         private readonly RealtimeStockContext _context;

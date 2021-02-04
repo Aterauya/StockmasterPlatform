@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 using HistoricalStockApi;
+using HistoricalStockApi.Interfaces;
 using Microsoft.Extensions.Configuration;
 
 namespace HistoricalStockIngestionService.Helpers

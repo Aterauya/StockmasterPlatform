@@ -1,21 +1,17 @@
-﻿<Project Sdk="Microsoft.NET.Sdk.Worker">
-
+﻿<Project Sdk="Microsoft.NET.Sdk.Worker;Microsoft.NET.Sdk.Publish">
   <PropertyGroup>
     <TargetFramework>netcoreapp3.1</TargetFramework>
     <UserSecretsId>dotnet-CompaniesIngestionWorker-3F5B649D-C051-4DD6-A236-C458076C4E1E</UserSecretsId>
     <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
   </PropertyGroup>
-
   <ItemGroup>
     <Content Remove="appsettings.json" />
   </ItemGroup>
-
   <ItemGroup>
     <None Include="appsettings.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
   </ItemGroup>
-
   <ItemGroup>
     <PackageReference Include="Coravel" Version="4.0.1" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="3.1.11">
@@ -25,9 +21,13 @@
     <PackageReference Include="Microsoft.Extensions.Hosting" Version="3.1.1" />
     <PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.9.10" />
   </ItemGroup>
-
   <ItemGroup>
     <ProjectReference Include="..\CompaniesApi\CompaniesApi.csproj" />
     <ProjectReference Include="..\CompaniesEntityFramework\CompaniesEntityFramework.csproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Update="Settings.job">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
 </Project>
