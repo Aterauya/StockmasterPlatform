@@ -27,11 +27,21 @@ namespace RealtimeStockQueryService
     /// </summary>
     public class Startup
     {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="Startup"/> class.
+        /// </summary>
+        /// <param name="configuration">The configuration.</param>
         public Startup(IConfiguration configuration)
         {
             _configuration = configuration;
         }
 
+        /// <summary>
+        /// Gets the configuration.
+        /// </summary>
+        /// <value>
+        /// The configuration.
+        /// </value>
         public IConfiguration _configuration { get; }
 
         // This method gets called by the runtime. Use this method to add services to the container.

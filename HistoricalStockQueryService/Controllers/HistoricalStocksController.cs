@@ -11,6 +11,10 @@ using Microsoft.Extensions.Logging;
 
 namespace HistoricalStockQueryService.Controllers
 {
+    /// <summary>
+    /// The historical stock controller
+    /// </summary>
+    /// <seealso cref="Microsoft.AspNetCore.Mvc.Controller" />
     [Route("api/[controller]")]
     [ApiController]
     [Authorize]
@@ -25,6 +29,11 @@ namespace HistoricalStockQueryService.Controllers
             _logger = logger;
         }
 
+        /// <summary>
+        /// Gets the historical stocks.
+        /// </summary>
+        /// <param name="stockSymbol">The stock symbol.</param>
+        /// <returns>A list of historical stocks</returns>
         [Route("GetHistoricalStocks/{stockSymbol}")]
         [HttpGet]
         [ProducesResponseType(typeof(HistoricalStockDto), StatusCodes.Status200OK)]
