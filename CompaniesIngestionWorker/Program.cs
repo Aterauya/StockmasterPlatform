@@ -17,8 +17,15 @@ using Microsoft.Extensions.Hosting;
 
 namespace CompaniesIngestionWorker
 {
+    /// <summary>
+    /// The program class
+    /// </summary>
     public class Program
     {
+        /// <summary>
+        /// Defines the entry point of the application.
+        /// </summary>
+        /// <param name="args">The arguments.</param>
         public static void Main(string[] args)
         {
             IHost host = CreateHostBuilder(args).Build();
@@ -39,6 +46,10 @@ namespace CompaniesIngestionWorker
             host.Run();
         }
 
+        /// <summary>
+        /// Gets the configuration.
+        /// </summary>
+        /// <returns></returns>
         private static IConfiguration GetConfiguration()
         {
             return new ConfigurationBuilder()
@@ -47,7 +58,11 @@ namespace CompaniesIngestionWorker
                 .Build();
         }
 
-
+        /// <summary>
+        /// Creates the host builder.
+        /// </summary>
+        /// <param name="args">The arguments.</param>
+        /// <returns></returns>
         public static IHostBuilder CreateHostBuilder(string[] args) =>
             Host.CreateDefaultBuilder(args)
                 .ConfigureServices(services =>

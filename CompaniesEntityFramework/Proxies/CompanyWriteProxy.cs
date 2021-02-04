@@ -12,17 +12,31 @@ using Microsoft.Extensions.Logging;
 
 namespace CompaniesEntityFramework.Proxies
 {
+    /// <summary>
+    /// The company write proxy
+    /// </summary>
+    /// <seealso cref="CompaniesApi.Interfaces.ICompanyWriteProxy" />
     public class CompanyWriteProxy : ICompanyWriteProxy
     {
         private readonly CompanyDbContext _dbContext;
         private readonly ILogger<CompanyWriteProxy> _logger;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="CompanyWriteProxy"/> class.
+        /// </summary>
+        /// <param name="dbContext">The database context.</param>
+        /// <param name="logger">The logger.</param>
         public CompanyWriteProxy(CompanyDbContext dbContext, ILogger<CompanyWriteProxy> logger)
         {
             _dbContext = dbContext;
             _logger = logger;
         }
 
+        /// <summary>
+        /// Adds the company symbols.
+        /// </summary>
+        /// <param name="stockSymbols">The stock symbols.</param>
+        /// <exception cref="DataException"></exception>
         public async Task AddCompanySymbols(List<StockSymbolDTO> stockSymbols)
         {
             if (!stockSymbols.Any())
@@ -60,6 +74,10 @@ namespace CompaniesEntityFramework.Proxies
             }
         }
 
+        /// <summary>
+        /// Adds the company information.
+        /// </summary>
+        /// <param name="companyInformation">The company information.</param>
         public async Task AddCompanyInformation(CompanyInformationDto companyInformation)
         {
             if (companyInformation != null && !string.IsNullOrEmpty(companyInformation.Name))

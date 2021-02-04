@@ -14,11 +14,33 @@ using RestSharp;
 
 namespace RealtimeStockIngestion.Helpers
 {
+    /// <summary>
+    /// Realtime ingestion helper
+    /// </summary>
+    /// <seealso cref="RealtimeStockApi.IRealtimeStockIngestion" />
     public class RealtimeIngestionHelper : IRealtimeStockIngestion
     {
+        /// <summary>
+        /// The URL helper
+        /// </summary>
         private readonly IRealtimeStockUrlHelper _urlHelper;
+
+        /// <summary>
+        /// The write proxy
+        /// </summary>
         private readonly IRealtimeStockWriteProxy _writeProxy;
+
+        /// <summary>
+        /// The configuration
+        /// </summary>
         private readonly IConfiguration _configuration;
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="RealtimeIngestionHelper"/> class.
+        /// </summary>
+        /// <param name="urlHelper">The URL helper.</param>
+        /// <param name="writeProxy">The write proxy.</param>
+        /// <param name="configuration">The configuration.</param>
         public RealtimeIngestionHelper(IRealtimeStockUrlHelper urlHelper, IRealtimeStockWriteProxy writeProxy, IConfiguration configuration)
         {
             _urlHelper = urlHelper;
@@ -26,6 +48,9 @@ namespace RealtimeStockIngestion.Helpers
             _configuration = configuration;
         }
 
+        /// <summary>
+        /// Starts the ingestion.
+        /// </summary>
         public void StartIngestion()
         {
             using (var ws = new WebSocket(_urlHelper.GetFinnhubRealtimeStockUrl()))
@@ -69,6 +94,10 @@ namespace RealtimeStockIngestion.Helpers
             }
         }
 
+        /// <summary>
+        /// Gets the stock symbols.
+        /// </summary>
+        /// <returns></returns>
         public List<StockSymbolsDTO> GetStockSymbols()
         {
             var token = GetAuthToken();
@@ -98,6 +127,10 @@ namespace RealtimeStockIngestion.Helpers
             return copyOfStockList;
         }
 
+        /// <summary>
+        /// Gets the authentication token.
+        /// </summary>
+        /// <returns></returns>
         private AuthToken GetAuthToken()
         {
             var tokenClient = new RestClient(_configuration.GetSection("AuthTokenUrl").Value);

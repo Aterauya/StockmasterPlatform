@@ -5,23 +5,45 @@ using Newtonsoft.Json;
 
 namespace Common.Auth
 {
+    /// <summary>
+    /// The request auth token object
+    /// </summary>
     public class RequestAuthToken
     {
+        /// <summary>
+        /// The client identifier
+        /// </summary>
         [JsonProperty("client_id")]
-        private string ClientId;
+        private string _clientId;
+        /// <summary>
+        /// The client secret
+        /// </summary>
         [JsonProperty("client_secret")]
-        private string ClientSecret;
+        private string _clientSecret;
+        /// <summary>
+        /// The audience
+        /// </summary>
         [JsonProperty("audience")]
-        private string Audience;
+        private string _audience;
+        /// <summary>
+        /// The grant type
+        /// </summary>
         [JsonProperty("grant_type")]
-        private string GrantType;
+        private string _grantType;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="RequestAuthToken"/> class.
+        /// </summary>
+        /// <param name="clientId">The client identifier.</param>
+        /// <param name="clientSecret">The client secret.</param>
+        /// <param name="audience">The audience.</param>
+        /// <param name="grantType">Type of the grant.</param>
         public RequestAuthToken(string clientId, string clientSecret, string audience, string grantType)
         {
-            ClientId = clientId;
-            ClientSecret = clientSecret;
-            Audience = audience;
-            GrantType = grantType;
+            _clientId = clientId;
+            _clientSecret = clientSecret;
+            _audience = audience;
+            _grantType = grantType;
         }
     }
 }

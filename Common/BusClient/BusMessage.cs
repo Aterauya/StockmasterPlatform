@@ -5,6 +5,9 @@ using System.Text;
 
 namespace Common.BusClient
 {
+    /// <summary>
+    /// The bus message
+    /// </summary>
     public class BusMessage
     {
     }

@@ -11,8 +11,15 @@ using Microsoft.Extensions.Hosting;
 
 namespace HistoricalStockIngestionService
 {
+    /// <summary>
+    /// The program class
+    /// </summary>
     class Program
     {
+        /// <summary>
+        /// Defines the entry point of the application.
+        /// </summary>
+        /// <param name="args">The arguments.</param>
         static void Main(string[] args)
         {
             IHost host = CreateHostBuilder(args).Build();
@@ -26,6 +33,10 @@ namespace HistoricalStockIngestionService
             host.Run();
         }
 
+        /// <summary>
+        /// Gets the configuration.
+        /// </summary>
+        /// <returns></returns>
         private static IConfiguration GetConfiguration()
         {
             return new ConfigurationBuilder()
@@ -34,6 +45,11 @@ namespace HistoricalStockIngestionService
                 .Build();
         }
 
+        /// <summary>
+        /// Creates the host builder.
+        /// </summary>
+        /// <param name="args">The arguments.</param>
+        /// <returns></returns>
         public static IHostBuilder CreateHostBuilder(string[] args) =>
             Host.CreateDefaultBuilder(args)
                 .ConfigureServices(services =>

@@ -13,9 +13,20 @@ using Microsoft.EntityFrameworkCore;
 
 namespace RealtimeStockCommandService
 {
+    /// <summary>
+    /// The startup class
+    /// </summary>
     public class Startup
     {
+        /// <summary>
+        /// The configuration
+        /// </summary>
         private readonly IConfiguration _configuration;
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="Startup"/> class.
+        /// </summary>
+        /// <param name="configuration">The configuration.</param>
         public Startup(IConfiguration configuration)
         {
             _configuration = configuration;

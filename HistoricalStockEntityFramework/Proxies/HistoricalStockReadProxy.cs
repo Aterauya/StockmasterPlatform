@@ -13,17 +13,42 @@ using Microsoft.Extensions.Logging;
 
 namespace HistoricalStockEntityFramework.Proxies
 {
+    /// <summary>
+    /// The historical stock read proxy
+    /// </summary>
+    /// <seealso cref="HistoricalStockApi.Interfaces.IHistoricalStockReadProxy" />
     public class HistoricalStockReadProxy : IHistoricalStockReadProxy
     {
+        /// <summary>
+        /// The database context
+        /// </summary>
         private readonly HistoricalStockDbContext _dbContext;
+
+        /// <summary>
+        /// The logger
+        /// </summary>
         private readonly ILogger<HistoricalStockReadProxy> _logger;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="HistoricalStockReadProxy"/> class.
+        /// </summary>
+        /// <param name="dbContext">The database context.</param>
+        /// <param name="logger">The logger.</param>
         public HistoricalStockReadProxy(HistoricalStockDbContext dbContext, ILogger<HistoricalStockReadProxy> logger)
         {
             _dbContext = dbContext;
             _logger = logger;
         }
 
+        /// <summary>
+        /// Gets the historical stocks for company.
+        /// </summary>
+        /// <param name="stockSymbol">The stock symbol.</param>
+        /// <returns>
+        /// A list of historical stocks
+        /// </returns>
+        /// <exception cref="DataException">
+        /// </exception>
         public async Task<List<HistoricalStockDto>> GetHistoricalStocksForCompany(string stockSymbol)
         {
             if (string.IsNullOrEmpty(stockSymbol))

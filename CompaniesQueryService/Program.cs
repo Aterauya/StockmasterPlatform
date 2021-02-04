@@ -12,8 +12,15 @@ using Microsoft.Extensions.Logging;
 
 namespace CompaniesQueryService
 {
+    /// <summary>
+    /// The Program class
+    /// </summary>
     public class Program
     {
+        /// <summary>
+        /// Defines the entry point of the application.
+        /// </summary>
+        /// <param name="args">The arguments.</param>
         public static void Main(string[] args)
         {
             var host = CreateHostBuilder(args).Build();
@@ -28,6 +35,11 @@ namespace CompaniesQueryService
             host.Run();
         }
 
+        /// <summary>
+        /// Creates the host builder.
+        /// </summary>
+        /// <param name="args">The arguments.</param>
+        /// <returns></returns>
         public static IHostBuilder CreateHostBuilder(string[] args) =>
             Host.CreateDefaultBuilder(args)
                 .ConfigureWebHostDefaults(webBuilder =>

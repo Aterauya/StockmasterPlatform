@@ -12,6 +12,9 @@ using RealtimeStockEntityFramework.Models;
 
 namespace RealtimeStockQueryService
 {
+    /// <summary>
+    /// The program class
+    /// </summary>
     public class Program
     {
         public static void Main(string[] args)
@@ -28,6 +31,11 @@ namespace RealtimeStockQueryService
             host.Run();
         }
 
+        /// <summary>
+        /// Creates the host builder.
+        /// </summary>
+        /// <param name="args">The arguments.</param>
+        /// <returns></returns>
         public static IHostBuilder CreateHostBuilder(string[] args) =>
             Host.CreateDefaultBuilder(args)
                 .ConfigureWebHostDefaults(webBuilder =>
