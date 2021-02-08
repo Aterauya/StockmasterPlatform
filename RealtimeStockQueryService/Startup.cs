@@ -67,8 +67,8 @@ namespace RealtimeStockQueryService
             {
                 c.SwaggerDoc("v1", new OpenApiInfo
                 {
-                    Title = "Companies Stock Query Service",
-                    Description = "An Asp.net core 3.1 micro service for getting companies information built as part of my final year project",
+                    Title = "Realtime Stock Query Service",
+                    Description = "An Asp.net core 3.1 micro service for getting real time information built as part of my final year project",
                 });
                 // Set the comments path for the Swagger JSON and UI.
                 var xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";

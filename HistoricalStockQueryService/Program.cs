@@ -6,6 +6,9 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using HistoricalStockEntityFramework.Models;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace HistoricalStockQueryService
 {
@@ -20,7 +23,16 @@ namespace HistoricalStockQueryService
         /// <param name="args">The arguments.</param>
         public static void Main(string[] args)
         {
-            CreateHostBuilder(args).Build().Run();
+            var host = CreateHostBuilder(args).Build();
+
+            using (var scope = host.Services.CreateScope())
+            {
+                var services = scope.ServiceProvider;
+                var context = services.GetService<HistoricalStockDbContext>();
+                context.Database.Migrate();
+            }
+
+            host.Run();
         }
 
         /// <summary>

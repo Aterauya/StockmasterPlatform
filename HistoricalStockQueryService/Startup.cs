@@ -8,12 +8,15 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Threading.Tasks;
 using HistoricalStockApi.Interfaces;
 using HistoricalStockEntityFramework.Models;
 using HistoricalStockEntityFramework.Proxies;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.OpenApi.Models;
 
 namespace HistoricalStockQueryService
 {
@@ -55,6 +58,20 @@ namespace HistoricalStockQueryService
                     options.Audience = Configuration.GetSection("AuthAudience").Value;
                 });
 
+            // Add swagger documentation
+            services.AddSwaggerGen(c =>
+            {
+                c.SwaggerDoc("v1", new OpenApiInfo
+                {
+                    Title = "Historical Stock Query Service",
+                    Description = "An Asp.net core 3.1 micro service for getting historical stock information built as part of my final year project",
+                });
+                // Set the comments path for the Swagger JSON and UI.
+                var xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
+                var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
+                c.IncludeXmlComments(xmlPath);
+            });
+
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -66,6 +83,13 @@ namespace HistoricalStockQueryService
             }
 
             app.UseHttpsRedirection();
+
+            app.UseSwagger();
+
+            app.UseSwaggerUI(c =>
+            {
+                c.SwaggerEndpoint("/swagger/v1/swagger.json", "My API V1");
+            });
 
             app.UseRouting();
 
