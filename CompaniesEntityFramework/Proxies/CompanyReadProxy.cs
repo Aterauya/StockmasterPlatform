@@ -72,7 +72,7 @@ namespace CompaniesEntityFramework.Proxies
         /// All of the companies information
         /// </returns>
         /// <exception cref="DataException"></exception>
-        public async Task<List<CompanyInformationDto>> GetAllCompanyInformation()
+        public async Task<List<CompanyListDto>> GetAllCompanyInformation()
         {
             if (!_dbContext.CompanyInformation.Any())
             {
@@ -83,21 +83,12 @@ namespace CompaniesEntityFramework.Proxies
             var information = await _dbContext
                 .CompanyInformation
                 .Include(s => s.Symbol)
-                .Select(ci => new CompanyInformationDto
+                .Select(ci => new CompanyListDto
                 {
                     CompanyId = ci.CompanyId,
-                    SymbolId = ci.SymbolId,
-                    CompanySymbol = ci.Symbol.Symbol,
                     Name = ci.Name,
-                    Exchange = ci.Exchange,
-                    Ipo = ci.Ipo,
-                    MarketCapitalization = ci.MarketCapitalization,
-                    OutstandingShares = ci.OutstandingShares,
-                    Url = ci.Url,
-                    Logo = ci.Logo,
-                    CountryName = ci.CountryName,
-                    CurrencyName = ci.CurrencyName,
-                    IndustryName = ci.IndustryName
+                    CompanySymbol = ci.Symbol.Symbol,
+                    CurrencyName = ci.CurrencyName
                 }).ToListAsync();
 
             return information;
