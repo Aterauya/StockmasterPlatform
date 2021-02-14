@@ -117,6 +117,7 @@ namespace CompaniesEntityFramework.Proxies
                 {
                     CompanyId = ci.CompanyId,
                     SymbolId = ci.SymbolId,
+                    CompanySymbol = ci.Symbol.Symbol,
                     Name = ci.Name,
                     Exchange = ci.Exchange,
                     Ipo = ci.Ipo,
