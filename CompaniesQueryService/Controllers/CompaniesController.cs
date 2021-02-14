@@ -64,7 +64,7 @@ namespace CompaniesQueryService.Controllers
         [ProducesResponseType(typeof(List<CompanyInformationDto>), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [Produces("application/json")]
-        public async Task<ActionResult<List<CompanyInformationDto>>> GetCompaniesInformation()
+        public async Task<ActionResult<List<CompanyListDto>>> GetCompaniesInformation()
         {
             var companiesInformation = await _readProxy.GetAllCompanyInformation();
 

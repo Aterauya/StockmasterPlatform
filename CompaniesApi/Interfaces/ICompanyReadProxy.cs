@@ -21,7 +21,7 @@ namespace CompaniesApi.Interfaces
         /// Gets all company information.
         /// </summary>
         /// <returns>All of the companies information</returns>
-        Task<List<CompanyInformationDto>> GetAllCompanyInformation();
+        Task<List<CompanyListDto>> GetAllCompanyInformation();
 
         /// <summary>
         /// Gets the company information.
