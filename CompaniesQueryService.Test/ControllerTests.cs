@@ -18,39 +18,21 @@ namespace CompaniesQueryService.Test
     {
         #region TestDatas
 
-        private List<CompanyInformationDto> GetCompaniesInformation()
+        private List<CompanyListDto> GetCompaniesInformation()
         {
-            return new List<CompanyInformationDto>
+            return new List<CompanyListDto>
             {
-                new CompanyInformationDto
+                new CompanyListDto
                 {
                     CompanyId = new Guid("ddd0e31f-a120-4b7d-a5ba-ef62f4d7309e"),
-                    SymbolId = new Guid("69a264ce-c801-44a9-8b80-83af2a324dfe"),
                     Name = "Test Company 1",
-                    Exchange = "Test Company Exchange 1",
-                    Ipo = DateTime.Now,
-                    MarketCapitalization = 2.00M,
-                    OutstandingShares = 100,
-                    Url = "Test Company Url 1",
-                    Logo = "Test Company Logo 1",
-                    CountryName = "Test Company 1 Country",
                     CurrencyName = "Test Company 1 Currency",
-                    IndustryName = "Test Company 1 Industry"
                 },
-                new CompanyInformationDto
+                new CompanyListDto
                 {
                     CompanyId = new Guid("1c3d5ce9-16eb-4eab-a0f7-f1808d447f29"),
-                    SymbolId = new Guid("c5d43032-9945-4273-ae6e-ee2178229cff"),
                     Name = "Test Company 2",
-                    Exchange = "Test Company Exchange 2",
-                    Ipo = DateTime.Now,
-                    MarketCapitalization = 2.00M,
-                    OutstandingShares = 100,
-                    Url = "Test Company Url 2",
-                    Logo = "Test Company Logo 2",
-                    CountryName = "Test Company 2 Country",
                     CurrencyName = "Test Company 2 Currency",
-                    IndustryName = "Test Company 2 Industry"
                 }
             };
         }
@@ -135,7 +117,7 @@ namespace CompaniesQueryService.Test
             // Arrange 
             var mockProxy = new Mock<ICompanyReadProxy>();
             mockProxy.Setup(proxy => proxy.GetAllCompanyInformation())
-                .ReturnsAsync(new List<CompanyInformationDto>());
+                .ReturnsAsync(new List<CompanyListDto>());
 
             var controller = new CompaniesController(mockProxy.Object, logger);
 

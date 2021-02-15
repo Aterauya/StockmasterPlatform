@@ -128,7 +128,9 @@ namespace CompaniesEntityFramework.Proxies
                     CountryName = ci.CountryName,
                     CurrencyName = ci.CurrencyName,
                     IndustryName = ci.IndustryName
-                }).FirstOrDefaultAsync();
+                })
+                .OrderBy(e => e.CompanySymbol)
+                .FirstOrDefaultAsync();
         }
     }
 }
