@@ -22,13 +22,13 @@ namespace HistoricalStockIngestionService
         /// <param name="args">The arguments.</param>
         static void Main(string[] args)
         {
+            var now = DateTime.Now;
             IHost host = CreateHostBuilder(args).Build();
             host.Services
                 .UseScheduler(scheduler =>
                 {
                     scheduler.Schedule<HistoricalStockIngestionHelper>()
-                        .DailyAt(Convert.ToInt16(GetConfiguration().GetSection("IngestionWorkerStartHour").Value), 
-                            Convert.ToInt16(GetConfiguration().GetSection("IngestionWorkerStartMinute").Value));
+                        .DailyAt(now.Hour, now.Minute +1);
                 });
             host.Run();
         }

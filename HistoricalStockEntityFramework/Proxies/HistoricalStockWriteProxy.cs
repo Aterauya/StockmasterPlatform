@@ -54,7 +54,6 @@ namespace HistoricalStockEntityFramework.Proxies
             }
 
             var stocksToAdd = historicalStocks
-                .Where(StockDoesNotExist)
                 .Select(h => new HistoricalStock
                 {
                     HistoricalStockId = Guid.NewGuid(),
@@ -69,23 +68,9 @@ namespace HistoricalStockEntityFramework.Proxies
                 })
                 .ToList();
 
-            if (stocksToAdd.Any())
-            {
-                await _context.HistoricalStocks.AddRangeAsync(stocksToAdd);
-                await _context.SaveChangesAsync();
-            }
-        }
 
-        /// <summary>
-        /// Stocks the does not exist.
-        /// </summary>
-        /// <param name="historicalStock">The historical stock.</param>
-        /// <returns></returns>
-        private bool StockDoesNotExist(HistoricalStockDto historicalStock)
-        {
-            return !_context.HistoricalStocks
-                .Any(c => c.FilterHash.Equals($"{historicalStock.StockSymbol}{historicalStock.ClosingDateTime}"));
-
+            await _context.HistoricalStocks.AddRangeAsync(stocksToAdd);
+            await _context.SaveChangesAsync();
         }
     }
 }

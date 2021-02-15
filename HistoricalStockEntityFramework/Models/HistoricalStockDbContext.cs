@@ -33,7 +33,7 @@ namespace HistoricalStockEntityFramework.Models
         {
             modelBuilder.Entity<HistoricalStock>(entity =>
             {
-                entity.HasKey(e => e.HistoricalStockId)
+                entity.HasKey(e => new {e.HistoricalStockId, e.FilterHash})
                     .HasName("HistoricalStock_pk");
 
                 entity.Property(e => e.HistoricalStockId).ValueGeneratedNever();

@@ -113,7 +113,7 @@ namespace HistoricalStockIngestionService.Helpers
                                 HighPrice = ingestedData.HighPrice[i],
                                 LowPrice = ingestedData.LowPrice[i],
                                 OpeningPrice = ingestedData.OpeningPrice[i],
-                                ClosingDateTime = DateTimeOffset.FromUnixTimeSeconds(ingestedData.ClosingDateTime[i]).UtcDateTime,
+                                ClosingDateTime = UnixTimestampToDateTime(ingestedData.ClosingDateTime[i]),
                                 Volume = ingestedData.Volume[i],
                                 StockSymbol = symbol
                             });
@@ -170,6 +170,13 @@ namespace HistoricalStockIngestionService.Helpers
             IRestResponse tokenResponse = tokenClient.Execute(tokenRequest);
 
             return JsonConvert.DeserializeObject<AuthToken>(tokenResponse.Content);
+        }
+
+        private DateTime UnixTimestampToDateTime(long unixTime)
+        {
+            var dateTime = new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc);
+            var newDateTime =  dateTime.AddSeconds(unixTime);
+            return newDateTime;
         }
     }
 }
