@@ -89,7 +89,9 @@ namespace CompaniesEntityFramework.Proxies
                     Name = ci.Name,
                     CompanySymbol = ci.Symbol.Symbol,
                     CurrencyName = ci.CurrencyName
-                }).ToListAsync();
+                })
+                .OrderBy(e => e.CompanySymbol)
+                .ToListAsync();
 
             return information;
         }
@@ -129,7 +131,6 @@ namespace CompaniesEntityFramework.Proxies
                     CurrencyName = ci.CurrencyName,
                     IndustryName = ci.IndustryName
                 })
-                .OrderBy(e => e.CompanySymbol)
                 .FirstOrDefaultAsync();
         }
     }
