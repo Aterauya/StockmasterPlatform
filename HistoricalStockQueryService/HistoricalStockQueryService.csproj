@@ -11,7 +11,7 @@
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
-    <DocumentationFile>obj/Release/netcoreapp3.1/\HistoricalStockQueryService.xml</DocumentationFile>
+    <DocumentationFile>obj/Release/netcoreapp3.1/HistoricalStockQueryService.xml</DocumentationFile>
   </PropertyGroup>
 
   <ItemGroup>
