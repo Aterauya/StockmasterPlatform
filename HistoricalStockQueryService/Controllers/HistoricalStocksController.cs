@@ -17,7 +17,6 @@ namespace HistoricalStockQueryService.Controllers
     /// <seealso cref="Microsoft.AspNetCore.Mvc.Controller" />
     [Route("api/[controller]")]
     [ApiController]
-    [Authorize]
     public class HistoricalStocksController : Controller
     {
         private readonly IHistoricalStockReadProxy _readProxy;
