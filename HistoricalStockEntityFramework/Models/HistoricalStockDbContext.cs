@@ -36,7 +36,8 @@ namespace HistoricalStockEntityFramework.Models
                 entity.HasKey(e => new {e.HistoricalStockId, e.FilterHash})
                     .HasName("HistoricalStock_pk");
 
-                entity.Property(e => e.HistoricalStockId).ValueGeneratedNever();
+                entity.Property(e => e.HistoricalStockId)
+                    .ValueGeneratedNever();
 
                 entity.Property(e => e.StockSymbol)
                     .IsRequired()
@@ -60,10 +61,15 @@ namespace HistoricalStockEntityFramework.Models
 
                 entity.Property(e => e.ClosingDateTime)
                     .HasColumnType("date");
+
                 entity.Property(e => e.FilterHash)
+                    .ValueGeneratedNever()
                     .IsRequired()
                     .HasMaxLength(30)
                     .IsUnicode(false);
+
+                entity.HasIndex(e => e.FilterHash)
+                    .IsUnique();
 
             });
         }

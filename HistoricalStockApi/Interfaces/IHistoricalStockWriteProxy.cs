@@ -16,6 +16,6 @@ namespace HistoricalStockApi.Interfaces
         /// </summary>
         /// <param name="historicalStocks">The historical stocks.</param>
         /// <returns></returns>
-        Task AddHistoricalStock(List<HistoricalStockDto> historicalStocks);
+        Task AddHistoricalStock(List<HistoricalStockDto> historicalStocks, string stockSymbol);
     }
 }

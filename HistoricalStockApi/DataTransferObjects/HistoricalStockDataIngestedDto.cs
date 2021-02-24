@@ -54,7 +54,7 @@ namespace HistoricalStockApi.DataTransferObjects
         /// The volume.
         /// </value>
         [JsonProperty("v")]
-        public List<int> Volume { get; set; }
+        public List<long> Volume { get; set; }
 
         /// <summary>
         /// Gets or sets the closing date time.
