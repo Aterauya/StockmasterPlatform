@@ -78,7 +78,7 @@ namespace HistoricalStockIngestionService.Helpers
                 if (stocks.Any())
                 {
                     _logger.LogInformation($"Adding stocks from {companySymbol.StockSymbol}");
-                    await _writeProxy.AddHistoricalStock(stocks);
+                    await _writeProxy.AddHistoricalStock(stocks, companySymbol.StockSymbol);
                 }
             }
         }
@@ -96,7 +96,7 @@ namespace HistoricalStockIngestionService.Helpers
 
             using (HttpClient client = new HttpClient())
             using (HttpResponseMessage res =
-                await client.GetAsync(_urlHelper.GetCandleUrl(symbol, 1, dateTo, dateFrom)))
+                await client.GetAsync(_urlHelper.GetCandleUrl(symbol, 'D', dateTo, dateFrom)))
             using (HttpContent content = res.Content)
             { 
                 if (res.IsSuccessStatusCode)

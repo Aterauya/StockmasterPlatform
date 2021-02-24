@@ -16,7 +16,7 @@ namespace HistoricalStockIngestionService.Helpers
             _configuration = configuration;
         }
 
-        public string GetCandleUrl(string stockSymbol, int resolution, long timeFrom, long timeTo)
+        public string GetCandleUrl(string stockSymbol, char resolution, long timeFrom, long timeTo)
         { 
             var url = string.Format(_configuration.GetSection("finnHubCandleUrl").Value, new object[]{stockSymbol, resolution, timeFrom, 
                 timeTo, _configuration.GetSection("finnHubToken").Value});

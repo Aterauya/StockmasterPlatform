@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using HistoricalStockApi.DataTransferObjects;
 using HistoricalStockApi.Interfaces;
 using HistoricalStockEntityFramework.Models;
+using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Internal;
 using Microsoft.Extensions.Logging;
@@ -44,14 +45,16 @@ namespace HistoricalStockEntityFramework.Proxies
         /// Adds the historical stock.
         /// </summary>
         /// <param name="historicalStocks">The historical stocks.</param>
+        /// <param name="stockSymbol">The stock symbol</param>
         /// <exception cref="DataException"></exception>
-        public async Task AddHistoricalStock(List<HistoricalStockDto> historicalStocks)
+        public async Task AddHistoricalStock(List<HistoricalStockDto> historicalStocks, string stockSymbol)
         {
             if (!historicalStocks.Any())
             {
                 _logger.LogError("List of historical stocks is empty");
                 throw new DataException();
             }
+
 
             var stocksToAdd = historicalStocks
                 .Select(h => new HistoricalStock
@@ -64,13 +67,37 @@ namespace HistoricalStockEntityFramework.Proxies
                     ClosePrice = h.ClosePrice,
                     Volume = h.Volume,
                     ClosingDateTime = h.ClosingDateTime,
-                    FilterHash = $"{h.StockSymbol}{h.ClosingDateTime}"
+                    FilterHash = $"{h.StockSymbol}{h.ClosingDateTime.Date}"
                 })
                 .ToList();
 
+            
+            try
+            {
+                await _context.HistoricalStocks.AddRangeAsync(await RemoveDuplicateStockEntries(stocksToAdd, stockSymbol));
+                await _context.SaveChangesAsync();
+            }
+            catch (DbUpdateException e)
+            {
+                _logger.LogInformation(e.Message);
+            }
+        }
 
-            await _context.HistoricalStocks.AddRangeAsync(stocksToAdd);
-            await _context.SaveChangesAsync();
+        public async Task<List<HistoricalStock>> RemoveDuplicateStockEntries(List<HistoricalStock> stocks, string ticker)
+        {
+            var copyOfStocks = stocks;
+
+            var currentStocks = await _context.HistoricalStocks
+                .Where(s => s.StockSymbol.Equals(ticker))
+                .ToListAsync();
+
+
+            foreach (var stock in currentStocks)
+            {
+                copyOfStocks.RemoveAll(s => s.FilterHash == stock.FilterHash);
+            }
+
+            return copyOfStocks;
         }
     }
 }

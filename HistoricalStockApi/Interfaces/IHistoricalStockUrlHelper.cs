@@ -13,6 +13,6 @@
         /// <param name="timeFrom">The time from.</param>
         /// <param name="timeTo">The time to.</param>
         /// <returns>The candle url</returns>
-        string GetCandleUrl(string stockSymbol, int resolution, long timeFrom, long timeTo);
+        string GetCandleUrl(string stockSymbol, char resolution, long timeFrom, long timeTo);
     }
 }
