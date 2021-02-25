@@ -5,10 +5,12 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using HistoricalStockApi.DataTransferObjects;
+using HistoricalStockApi.Interfaces;
 using HistoricalStockEntityFramework.Models;
 using HistoricalStockEntityFramework.Proxies;
 using HistoricalStockEntityFramework.Test.DatabaseMock;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Query.Internal;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
@@ -115,6 +117,11 @@ namespace HistoricalStockEntityFramework.Test
             // Arrange
             var mockContext = new Mock<HistoricalStockDbContext>();
 
+            var mockReadProxy = new Mock<IHistoricalStockReadProxy>();
+            mockReadProxy.Setup(c =>
+                    c.GetHistoricalStocksForCompany(It.IsAny<string>()))
+                .Returns(Task.FromResult(new List<HistoricalStockDto>()));
+
             var stocksInDb = new List<HistoricalStock>();
 
             mockContext.Setup(c => c.HistoricalStocks)
@@ -124,10 +131,39 @@ namespace HistoricalStockEntityFramework.Test
                 .AddLogging()
                 .BuildServiceProvider();
 
+            var stocksToAdd = new List<HistoricalStockDto>
+            {
+                new HistoricalStockDto
+                {
+                    StockSymbol = "Fake1",
+                    Volume = 10,
+                    ClosingDateTime = DateTime.Today,
+                    ClosePrice = 9,
+                    HighPrice = 11,
+                    HistoricalStockId = Guid.NewGuid(),
+                    LowPrice = 1,
+                    OpeningPrice = 5,
+                    FilterHash = $"Fake1{DateTime.Today}"
+
+                },
+                new HistoricalStockDto
+                {
+                    StockSymbol = "Fake2",
+                    Volume = 10,
+                    ClosingDateTime = DateTime.Today,
+                    ClosePrice = 9,
+                    HighPrice = 11,
+                    HistoricalStockId = Guid.NewGuid(),
+                    LowPrice = 1,
+                    OpeningPrice = 5,
+                    FilterHash = $"Fake2{DateTime.Today}"
+                }
+            };
+
             var factory = serviceProvider.GetService<ILoggerFactory>();
             var logger = factory.CreateLogger<HistoricalStockWriteProxy>();
 
-            var writeProxy = new HistoricalStockWriteProxy(mockContext.Object, logger);
+            var writeProxy = new HistoricalStockWriteProxy(mockContext.Object, logger, mockReadProxy.Object);
 
             var stocks = new List<HistoricalStockDto>
             {
@@ -141,6 +177,8 @@ namespace HistoricalStockEntityFramework.Test
                     HistoricalStockId = Guid.NewGuid(),
                     LowPrice = 1,
                     OpeningPrice = 5,
+                    FilterHash = $"Fake1{DateTime.Today}"
+
                 },
                 new HistoricalStockDto
                 {
@@ -152,11 +190,13 @@ namespace HistoricalStockEntityFramework.Test
                     HistoricalStockId = Guid.NewGuid(),
                     LowPrice = 1,
                     OpeningPrice = 5,
+                    FilterHash = $"Fake2{DateTime.Today}"
+
                 }
             };
 
             // Act
-            await writeProxy.AddHistoricalStock(stocks);
+            await writeProxy.AddHistoricalStock(stocks, "Fake1");
 
             // Assert
             mockContext.Verify(m => m.SaveChangesAsync(It.IsAny<CancellationToken>()), Times.Once());
@@ -197,6 +237,37 @@ namespace HistoricalStockEntityFramework.Test
                 }
             };
 
+            var stocksToAdd = new List<HistoricalStockDto>
+            {
+                new HistoricalStockDto
+                {
+                    StockSymbol = "Fake1",
+                    Volume = 10,
+                    ClosingDateTime = DateTime.Today,
+                    ClosePrice = 9,
+                    HighPrice = 11,
+                    HistoricalStockId = Guid.NewGuid(),
+                    LowPrice = 1,
+                    OpeningPrice = 5,
+                    FilterHash = $"Fake1{DateTime.Today}"
+
+                },
+                new HistoricalStockDto
+                {
+                    StockSymbol = "Fake2",
+                    Volume = 10,
+                    ClosingDateTime = DateTime.Today,
+                    ClosePrice = 9,
+                    HighPrice = 11,
+                    HistoricalStockId = Guid.NewGuid(),
+                    LowPrice = 1,
+                    OpeningPrice = 5,
+                    FilterHash = $"Fake2{DateTime.Today}"
+                }
+            };
+
+
+
             mockContext.Setup(c => c.HistoricalStocks)
                 .Returns(GetQueryableHistoricalStockDbSet(stocksInDb));
 
@@ -204,10 +275,17 @@ namespace HistoricalStockEntityFramework.Test
                 .AddLogging()
                 .BuildServiceProvider();
 
+            var mockReadProxy = new Mock<IHistoricalStockReadProxy>();
+            mockReadProxy.Setup(c =>
+                    c.GetHistoricalStocksForCompany(It.IsAny<string>()))
+                .Returns(Task.FromResult(stocksToAdd));
+
+
             var factory = serviceProvider.GetService<ILoggerFactory>();
             var logger = factory.CreateLogger<HistoricalStockWriteProxy>();
 
-            var writeProxy = new HistoricalStockWriteProxy(mockContext.Object, logger);
+
+            var writeProxy = new HistoricalStockWriteProxy(mockContext.Object, logger, mockReadProxy.Object);
 
             var stocks = new List<HistoricalStockDto>
             {
@@ -221,10 +299,12 @@ namespace HistoricalStockEntityFramework.Test
                     HistoricalStockId = Guid.NewGuid(),
                     LowPrice = 1,
                     OpeningPrice = 5,
+                    FilterHash = $"Fake1{DateTime.Today}"
+
                 },
                 new HistoricalStockDto
                 {
-                    StockSymbol = "Fake2",
+                    StockSymbol = "Fake1",
                     Volume = 10,
                     ClosingDateTime = DateTime.Today,
                     ClosePrice = 9,
@@ -232,11 +312,13 @@ namespace HistoricalStockEntityFramework.Test
                     HistoricalStockId = Guid.NewGuid(),
                     LowPrice = 1,
                     OpeningPrice = 5,
+                    FilterHash = $"Fake1{DateTime.Today}"
+
                 }
             };
 
             // Act
-            await writeProxy.AddHistoricalStock(stocks);
+            await writeProxy.AddHistoricalStock(stocks, "Fake1");
 
             // Assert
             mockContext.Verify(m => m.SaveChangesAsync(It.IsAny<CancellationToken>()), Times.Never);

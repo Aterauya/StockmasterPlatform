@@ -106,7 +106,7 @@ namespace CompaniesQueryService.Test
             var result = await controller.GetCompaniesInformation();
 
             // Assert
-            Assert.IsInstanceOf(typeof(ActionResult<List<CompanyInformationDto>>), result);
+            Assert.IsInstanceOf(typeof(ActionResult<List<CompanyListDto>>), result);
             Assert.AreEqual("Test Company 1", result.Value[0].Name);
             Assert.AreEqual("Test Company 2", result.Value[1].Name);
         }
@@ -125,7 +125,7 @@ namespace CompaniesQueryService.Test
             var result = await controller.GetCompaniesInformation();
 
             // Assert
-            Assert.IsInstanceOf(typeof(ActionResult<List<CompanyInformationDto>>), result);
+            Assert.IsInstanceOf(typeof(ActionResult<List<CompanyListDto>>), result);
             Assert.IsInstanceOf(typeof(NotFoundResult), result.Result);
         }
 

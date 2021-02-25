@@ -166,11 +166,12 @@ namespace CompaniesEntityFramework.Test
             var testDb = new CompaniesTestDb(mockConfiguration.Object);
 
             testDb.AddCompanies(testDb.GetCompaniesInformation());
+            testDb.AddCompaniesSymbols(testDb.GetSymbols());
 
             var readProxy = new CompanyReadProxy(testDb.GetContext(), logger);
 
             // Act
-            var result = await readProxy.GetCompanyInformation(new Guid("3c1ee777-ac41-456b-9e00-2993668d90d0"));
+            var result = await readProxy.GetCompanyInformation(Guid.Parse("3c1ee777-ac41-456b-9e00-2993668d90d0"));
 
             // Assert
             Assert.AreEqual("Test company 1", result.Name);

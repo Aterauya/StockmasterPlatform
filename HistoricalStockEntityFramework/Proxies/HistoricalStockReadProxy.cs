@@ -68,7 +68,8 @@ namespace HistoricalStockEntityFramework.Proxies
                     LowPrice = s.LowPrice,
                     ClosePrice = s.ClosePrice,
                     Volume = s.Volume,
-                    ClosingDateTime = s.ClosingDateTime
+                    ClosingDateTime = s.ClosingDateTime,
+                    FilterHash = s.FilterHash
                 }).ToListAsync();
 
             if (!stocks.Any())

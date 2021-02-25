@@ -105,5 +105,30 @@ namespace CompaniesQueryService.Controllers
 
             return companyInformation;
         }
+
+        /// <summary>
+        /// Gets the companies list information.
+        /// </summary>
+        /// <param name="pageNumber">The page number.</param>
+        /// <returns>The company list with pagination</returns>
+        [Route("GetCompaniesList/{pageNumber}")]
+        [HttpGet]
+        [ProducesResponseType(typeof(CompanyListDto), StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [Produces("application/json")]
+        public async Task<ActionResult<CompanyPageListDto>> GetCompaniesListInformation(int pageNumber)
+        {
+            var startIndex = pageNumber == 0 ? 0 : pageNumber * 10 + 1;
+            var endIndex = startIndex + 10;
+            var companyListPage = await _readProxy.GetCompanyList(startIndex, endIndex, pageNumber);
+
+            if (!companyListPage.Data.Any())
+            {
+                _logger.LogError("No data was found in the database");
+                return NotFound();
+            }
+
+            return companyListPage;
+        }
     }
 }
