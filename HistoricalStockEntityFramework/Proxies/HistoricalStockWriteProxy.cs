@@ -31,14 +31,21 @@ namespace HistoricalStockEntityFramework.Proxies
         private readonly ILogger<HistoricalStockWriteProxy> _logger;
 
         /// <summary>
+        /// The read proxy
+        /// </summary>
+        private readonly IHistoricalStockReadProxy _readProxy;
+
+        /// <summary>
         /// Initializes a new instance of the <see cref="HistoricalStockWriteProxy"/> class.
         /// </summary>
         /// <param name="context">The context.</param>
         /// <param name="logger">The logger.</param>
-        public HistoricalStockWriteProxy(HistoricalStockDbContext context, ILogger<HistoricalStockWriteProxy> logger)
+        public HistoricalStockWriteProxy(HistoricalStockDbContext context, ILogger<HistoricalStockWriteProxy> logger,
+            IHistoricalStockReadProxy readProxy)
         {
             _context = context;
             _logger = logger;
+            _readProxy = readProxy;
         }
 
         /// <summary>
@@ -55,8 +62,9 @@ namespace HistoricalStockEntityFramework.Proxies
                 throw new DataException();
             }
 
+            var cleanedStocks = await RemoveDuplicateStockEntries(historicalStocks, stockSymbol);
 
-            var stocksToAdd = historicalStocks
+            var stocksToAdd = cleanedStocks
                 .Select(h => new HistoricalStock
                 {
                     HistoricalStockId = Guid.NewGuid(),
@@ -67,29 +75,23 @@ namespace HistoricalStockEntityFramework.Proxies
                     ClosePrice = h.ClosePrice,
                     Volume = h.Volume,
                     ClosingDateTime = h.ClosingDateTime,
-                    FilterHash = $"{h.StockSymbol}{h.ClosingDateTime.Date}"
+                    FilterHash = h.FilterHash
                 })
                 .ToList();
 
-            
-            try
+            if (stocksToAdd.Any())
             {
-                await _context.HistoricalStocks.AddRangeAsync(await RemoveDuplicateStockEntries(stocksToAdd, stockSymbol));
+                await _context.HistoricalStocks.AddRangeAsync();
                 await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateException e)
-            {
-                _logger.LogInformation(e.Message);
             }
         }
 
-        public async Task<List<HistoricalStock>> RemoveDuplicateStockEntries(List<HistoricalStock> stocks, string ticker)
+
+        public async Task<List<HistoricalStockDto>> RemoveDuplicateStockEntries(List<HistoricalStockDto> stocks, string ticker)
         {
             var copyOfStocks = stocks;
 
-            var currentStocks = await _context.HistoricalStocks
-                .Where(s => s.StockSymbol.Equals(ticker))
-                .ToListAsync();
+            var currentStocks = await _readProxy.GetHistoricalStocksForCompany(ticker);
 
 
             foreach (var stock in currentStocks)

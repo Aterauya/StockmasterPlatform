@@ -115,7 +115,8 @@ namespace HistoricalStockIngestionService.Helpers
                                 OpeningPrice = ingestedData.OpeningPrice[i],
                                 ClosingDateTime = UnixTimestampToDateTime(ingestedData.ClosingDateTime[i]),
                                 Volume = ingestedData.Volume[i],
-                                StockSymbol = symbol
+                                StockSymbol = symbol,
+                                FilterHash = $"{symbol}{UnixTimestampToDateTime(ingestedData.ClosingDateTime[i])}"
                             });
                         }
                     }

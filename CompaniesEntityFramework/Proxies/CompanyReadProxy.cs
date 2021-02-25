@@ -112,7 +112,7 @@ namespace CompaniesEntityFramework.Proxies
                 throw new DataException();
             }
 
-            return await _dbContext
+            var company = await _dbContext
                 .CompanyInformation
                 .Where(ci => ci.CompanyId == companyId)
                 .Select(ci => new CompanyInformationDto
@@ -130,8 +130,48 @@ namespace CompaniesEntityFramework.Proxies
                     CountryName = ci.CountryName,
                     CurrencyName = ci.CurrencyName,
                     IndustryName = ci.IndustryName
-                })
-                .FirstOrDefaultAsync();
+                }).FirstOrDefaultAsync();
+
+            return company;
+        }
+
+        /// <summary>
+        /// Gets the company list.
+        /// </summary>
+        /// <param name="startIndex">The start index.</param>
+        /// <param name="endIndex">The end index.</param>
+        /// <param name="pageNumber">The page number.</param>
+        /// <returns>The company list</returns>
+        /// <exception cref="DataException"></exception>
+        public async Task<CompanyPageListDto> GetCompanyList(int startIndex, int endIndex, int pageNumber)
+        {
+            if (!_dbContext.CompanyInformation.Any())
+            {
+                _logger.LogError("Error when getting company information from database");
+                throw new DataException();
+            }
+
+            var count = _dbContext.CompanyInformation.Count();
+
+            var data = await _dbContext.CompanyInformation
+                .Skip(startIndex)
+                .Take(startIndex - endIndex)
+                .Select(ci => new CompanyListDto
+                {
+                    CompanyId = ci.CompanyId,
+                    Name = ci.Name,
+                    CompanySymbol = ci.Symbol.Symbol,
+                    CurrencyName = ci.CurrencyName,
+                }).ToListAsync();
+
+            return new CompanyPageListDto
+            {
+                Data = data,
+                CurrentPageNumber = pageNumber,
+                DataCount = count,
+                HasNext = endIndex / 10 > 0,
+                HasPrevious = startIndex / 10 > 0,
+            };
         }
     }
 }

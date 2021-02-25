@@ -29,5 +29,17 @@ namespace CompaniesApi.Interfaces
         /// <param name="companyId">The company identifier.</param>
         /// <returns>The specific companies information</returns>
         Task<CompanyInformationDto> GetCompanyInformation(Guid companyId);
+
+        /// <summary>
+        /// Gets the company list.
+        /// </summary>
+        /// <param name="startIndex">The start index.</param>
+        /// <param name="endIndex">The end index.</param>
+        /// <param name="pageNumber">The page number.</param>
+        /// <returns></returns>
+        Task<CompanyPageListDto> GetCompanyList(int startIndex, int endIndex, int pageNumber);
+
+
+
     }
 }

@@ -80,5 +80,13 @@ namespace HistoricalStockApi.DataTransferObjects
         /// The status.
         /// </value>
         public string Status { get; set; }
+
+        /// <summary>
+        /// Gets or sets the filter hash.
+        /// </summary>
+        /// <value>
+        /// The filter hash.
+        /// </value>
+        public string FilterHash { get; set; }
     }
 }

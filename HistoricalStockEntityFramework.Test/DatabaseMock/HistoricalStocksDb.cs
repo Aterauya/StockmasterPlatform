@@ -49,7 +49,8 @@ namespace HistoricalStockEntityFramework.Test.DatabaseMock
                     LowPrice = 1.00,
                     StockSymbol = "Fake",
                     Volume = 10,
-                    ClosingDateTime = DateTime.Today
+                    ClosingDateTime = DateTime.Today,
+                    FilterHash = $"Fake{DateTime.Today}"
                 },
                 new HistoricalStock
                 {
@@ -60,7 +61,9 @@ namespace HistoricalStockEntityFramework.Test.DatabaseMock
                     LowPrice = 1.00,
                     StockSymbol = "Fake",
                     Volume = 20,
-                    ClosingDateTime = DateTime.Today
+                    ClosingDateTime = DateTime.Today,
+                    FilterHash = $"Fake{DateTime.Today}"
+
                 },
                 new HistoricalStock
                 {
@@ -71,7 +74,8 @@ namespace HistoricalStockEntityFramework.Test.DatabaseMock
                     LowPrice = 1.00,
                     StockSymbol = "Fake",
                     Volume = 40,
-                    ClosingDateTime = DateTime.Today
+                    ClosingDateTime = DateTime.Today,
+                    FilterHash = $"Fake{DateTime.Today}"
                 }
             };
         }
