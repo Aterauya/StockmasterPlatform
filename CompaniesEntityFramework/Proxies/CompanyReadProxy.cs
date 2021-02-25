@@ -155,7 +155,7 @@ namespace CompaniesEntityFramework.Proxies
 
             var data = await _dbContext.CompanyInformation
                 .Skip(startIndex)
-                .Take(startIndex - endIndex)
+                .Take(endIndex - startIndex)
                 .Select(ci => new CompanyListDto
                 {
                     CompanyId = ci.CompanyId,

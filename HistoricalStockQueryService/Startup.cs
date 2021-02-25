@@ -51,6 +51,7 @@ namespace HistoricalStockQueryService
 
             // Add Authentication
             services.AddMvc();
+
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
                 .AddJwtBearer(options =>
                 {
