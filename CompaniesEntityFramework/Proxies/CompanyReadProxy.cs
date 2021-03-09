@@ -154,6 +154,7 @@ namespace CompaniesEntityFramework.Proxies
             var count = _dbContext.CompanyInformation.Count();
 
             var data = await _dbContext.CompanyInformation
+                .Include(s => s.Symbol)
                 .OrderBy(ci => ci.Symbol)
                 .Skip(startIndex)
                 .Take(endIndex - startIndex)
