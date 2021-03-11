@@ -7,6 +7,7 @@ using CompaniesApi.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Routing.Constraints;
 using Microsoft.Extensions.Logging;
 
 namespace CompaniesQueryService.Controllers
@@ -110,16 +111,17 @@ namespace CompaniesQueryService.Controllers
         /// Gets the companies list information.
         /// </summary>
         /// <param name="pageNumber">The page number.</param>
+        /// <param name="itemsPerPage">The amount of items per page.</param>
         /// <returns>The company list with pagination</returns>
-        [Route("GetCompaniesList/{pageNumber}")]
+        [Route("GetCompaniesList/pageNumber={pageNumber},itemsPerPage={itemsPerPage}")]
         [HttpGet]
         [ProducesResponseType(typeof(CompanyListDto), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [Produces("application/json")]
-        public async Task<ActionResult<CompanyPageListDto>> GetCompaniesListInformation(int pageNumber)
+        public async Task<ActionResult<CompanyPageListDto>> GetCompaniesListInformation(int pageNumber, int itemsPerPage)
         {
-            var startIndex = pageNumber == 0 ? 0 : pageNumber * 10 + 1;
-            var endIndex = startIndex + 10;
+            var startIndex = pageNumber == 0 ? 0 : pageNumber * itemsPerPage + 1;
+            var endIndex = startIndex + itemsPerPage;
             var companyListPage = await _readProxy.GetCompanyList(startIndex, endIndex, pageNumber);
 
             if (!companyListPage.Data.Any())
